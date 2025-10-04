@@ -1,0 +1,206 @@
+﻿
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+
+<head>
+	<title>کارپارتس شاپ | @ViewData["Title"]</title>
+
+	<!-- Meta Tags -->
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+	<meta name="author" content="Blogzine">
+	<meta name="description" content="قالب وبلاگ و مجله خبری مبتنی بر بوت استرپ">
+	<!-- Dark mode -->
+	<script>
+		const storedTheme = localStorage.getItem('theme')
+ 
+		const getPreferredTheme = () => {
+			if (storedTheme) {
+				return storedTheme
+			}
+			return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
+		}
+
+		const setTheme = function (theme) {
+			if (theme === 'auto' && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+				document.documentElement.setAttribute('data-bs-theme', 'dark')
+			} else {
+				document.documentElement.setAttribute('data-bs-theme', theme)
+			}
+		}
+
+		setTheme(getPreferredTheme())
+
+		window.addEventListener('DOMContentLoaded', () => {
+		    var el = document.querySelector('.theme-icon-active');
+			if(el != 'undefined' && el != null) {
+				const showActiveTheme = theme => {
+				const activeThemeIcon = document.querySelector('.theme-icon-active use')
+				const btnToActive = document.querySelector(`[data-bs-theme-value="${theme}"]`)
+				const svgOfActiveBtn = btnToActive.querySelector('.mode-switch use').getAttribute('href')
+
+				document.querySelectorAll('[data-bs-theme-value]').forEach(element => {
+					element.classList.remove('active')
+				})
+
+				btnToActive.classList.add('active')
+				activeThemeIcon.setAttribute('href', svgOfActiveBtn)
+			}
+
+			window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => {
+				if (storedTheme !== 'light' || storedTheme !== 'dark') {
+					setTheme(getPreferredTheme())
+				}
+			})
+
+			showActiveTheme(getPreferredTheme())
+
+			document.querySelectorAll('[data-bs-theme-value]')
+				.forEach(toggle => {
+					toggle.addEventListener('click', () => {
+						const theme = toggle.getAttribute('data-bs-theme-value')
+						localStorage.setItem('theme', theme)
+						setTheme(theme)
+						showActiveTheme(theme)
+					})
+				})
+
+			}
+		})
+		
+	</script>
+
+	<!-- Favicon -->
+	<link rel="shortcut icon" href="/site/assets/images/favicon.ico">
+
+	<!-- Plugins CSS -->
+	<link rel="stylesheet" type="text/css" href="/site/assets/vendor/font-awesome/css/all.min.css">
+	<link rel="stylesheet" type="text/css" href="/site/assets/vendor/bootstrap-icons/bootstrap-icons.css">
+
+	<!-- Theme CSS -->
+	<link id="style-switch" rel="stylesheet" type="text/css" href="/site/assets/css/style-rtl.css">
+	<link rel="stylesheet" href="/lib/toastr/toastr.min.css">
+
+</head>
+
+<body>
+<!-- Preloader START -->
+	<div class="preloader">
+		<div class="loader">
+			<div class="sh1"></div>
+			<div class="sh2"></div>
+		</div>
+	</div>
+<!-- Preloader END -->
+
+<!-- =======================
+@await Component.InvokeAsync("Header")
+
+<!-- **************** MAIN CONTENT START **************** -->
+<main>
+
+<!-- =======================
+Inner intro START -->
+@RenderBody()
+<!-- =======================
+Inner intro END -->
+
+</main>
+<!-- **************** MAIN CONTENT END **************** -->
+
+<!-- =======================
+Footer START -->
+<footer class="pb-0">
+	<div class="container">
+		<hr>
+		<!-- Widgets START -->
+		<div class="row pt-5">
+			<!-- Footer Widget -->
+			<div class="col-md-6 col-lg-4 mb-4">
+				<img class="light-mode-item" src="/site/assets/images/logo.svg" alt="logo">			
+				<img class="dark-mode-item" src="/site/assets/images/logo-light.svg" alt="logo">
+				<p class="mt-3">این قالب مبتنی بر بوت استرپ 5 برای همه انواع سایت های مجله خبری و وبلاگ مناسب است.</p>
+				<div class="mt-4">©2022 ارائه شده در سایت <a href="https://www.rtl-theme.com/" class="text-reset btn-link" target="_blank">راست چین</a>
+				</div>
+			</div>
+
+			<!-- Footer Widget -->
+			<div class="col-md-6 col-lg-3 mb-4">
+				<h5 class="mb-4">لینک های مفید</h5>
+				<div class="row">
+					<div class="col-6">
+						<ul class="nav flex-column">
+							<li class="nav-item"><a class="nav-link pt-0" href="#">درباره ما</a></li>
+							<li class="nav-item"><a class="nav-link" href="#">داشبورد</a></li>
+							<li class="nav-item"><a class="nav-link" href="#">تماس با ما</a></li>
+							<li class="nav-item"><a class="nav-link" href="#">خرید قالب</a></li>
+							<li class="nav-item"><a class="nav-link" href="#">پشتیبانی</a></li>
+						</ul>
+					</div>
+ 					<div class="col-6">
+						<ul class="nav flex-column">
+							<li class="nav-item"><a class="nav-link pt-0" href="#">اخبار</a></li>
+							<li class="nav-item"><a class="nav-link" href="#">بین الملل <span class="badge text-bg-danger ms-2">2</span></a></li>
+							<li class="nav-item"><a class="nav-link" href="#">تکنولوژی</a></li>
+							<li class="nav-item"><a class="nav-link" href="#">اقتصاد</a></li>
+							<li class="nav-item"><a class="nav-link" href="#">سیاست</a></li>
+						</ul>
+					</div>
+				</div>
+			</div>
+
+			<!-- Footer Widget -->
+			<div class="col-sm-6 col-lg-3 mb-4">
+				<h5 class="mb-4">پربیننده ترین</h5>
+				<ul class="list-inline">
+					<li class="list-inline-item"><a href="#" class="btn btn-sm btn-primary-soft">گردشگری</a></li>
+					<li class="list-inline-item"><a href="#" class="btn btn-sm btn-warning-soft">اقتصاد</a></li>
+					<li class="list-inline-item"><a href="#" class="btn btn-sm btn-success-soft">بورس</a></li>
+					<li class="list-inline-item"><a href="#" class="btn btn-sm btn-danger-soft">قیمت طلا</a></li>
+					<li class="list-inline-item"><a href="#" class="btn btn-sm btn-info-soft">فناوری و اطلاعات</a></li>
+					<li class="list-inline-item"><a href="#" class="btn btn-sm btn-primary-soft">قیمت ارز امروز</a></li>
+					<li class="list-inline-item"><a href="#" class="btn btn-sm btn-warning-soft">مگامنو</a></li>
+					<li class="list-inline-item"><a href="#" class="btn btn-sm btn-success-soft">ورزش</a></li>
+					<li class="list-inline-item"><a href="#" class="btn btn-sm btn-danger-soft">کووید</a></li>
+					<li class="list-inline-item"><a href="#" class="btn btn-sm btn-info-soft">فرهنگ</a></li>
+				</ul>
+			</div>
+
+			<!-- Footer Widget -->
+			<div class="col-sm-6 col-lg-2 mb-4">
+				<h5 class="mb-4">شبکه های اجتماعی</h5>
+				<ul class="nav flex-column">
+					<li class="nav-item"><a class="nav-link pt-0" href="#"><i class="fab fa-facebook-square fa-fw me-2 text-facebook"></i>Facebook</a></li>
+					<li class="nav-item"><a class="nav-link" href="#"><i class="fab fa-twitter-square fa-fw me-2 text-twitter"></i>Twitter</a></li>
+					<li class="nav-item"><a class="nav-link" href="#"><i class="fab fa-linkedin fa-fw me-2 text-linkedin"></i>Linkedin</a></li>
+					<li class="nav-item"><a class="nav-link" href="#"><i class="fab fa-youtube-square fa-fw me-2 text-youtube"></i>YouTube</a></li>
+				</ul>
+			</div>
+		</div>
+		<!-- Widgets END -->
+	</div>
+</footer>
+
+<!-- =======================
+Footer END -->
+
+<!-- Back to top -->
+<div class="back-top"><i class="bi bi-arrow-up-short"></i></div>
+
+<!-- =======================
+JS libraries, plugins and custom scripts -->
+
+<!-- Bootstrap JS -->
+<script src="/site/assets/vendor/bootstrap/dis	 t/js/bootstrap.bundle.min.js"></script>
+
+	<script src="/js/common.js"></script>
+<!-- Template Functions -->
+<script src="~/lib/jquery/dist/jquery.min.js"> </script>
+	<script src="/lib/toastr/toastr.min.js"></script>
+<script src="/site/assets/js/functions.js"></script>
+	<partial name="_ValidationScriptsPartial" />
+	<partial name="_Toastr" />
+	<partial name="_Captcha" />
+</body>
+
+</html>

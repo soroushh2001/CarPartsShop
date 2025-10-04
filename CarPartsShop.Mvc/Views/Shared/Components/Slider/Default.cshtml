@@ -1,0 +1,43 @@
+﻿@using CarPartsShop.Application.Statics
+@using CarPartsShop.Application.ViewModels.Sliders
+@model List<SliderViewModel>
+
+@if(Model!=null && Model.Any())
+{
+	<section class="bg-light">
+		<div class="container">
+			<div class="row">
+				<div class="col-12">
+					<!-- Slider START -->
+					<div class="tiny-slider tns-nav-line rounded-3">
+						<div class="tiny-slider-inner"
+							 data-autoplay="true"
+							 data-hoverpause="true"
+							 data-arrow="false"
+							 data-dots="true"
+							 data-items="1">
+
+							<!-- Slider Item START -->
+							@foreach(var item in Model)
+							{
+								<div>
+								<div class="row g-4 align-items-center">
+								
+
+									<!-- Image -->
+									<div class="col-md-12">
+										<img src="@StaticDetails.SliderOrgImagePath@item.ImageName" alt="">
+									</div>
+								</div>
+							</div>
+							}
+							<!-- Slider Item END -->
+						
+						</div>
+					</div>
+					<!-- Slider END -->
+				</div>
+			</div>
+		</div>
+	</section>
+}

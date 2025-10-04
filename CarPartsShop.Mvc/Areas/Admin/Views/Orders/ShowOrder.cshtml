@@ -1,0 +1,53 @@
+﻿@using CarPartsShop.Application.Statics
+@using CarPartsShop.Application.ViewModels.Orders
+@model List<OrderDetailsViewModel>
+@{
+    ViewData["Title"] = $"مشخصات سفارش {ViewBag.RefCode}";
+    var counter = 0;
+}
+
+<h3>
+    @ViewData["Title"] 
+</h3>
+
+<div class="row">
+    <!-- Basic Layout -->
+    <div class="col-md-12">
+        <div class="card mb-4">
+            <div class="card-header d-flex align-items-center justify-content-between">
+            </div>
+            <div class="card-body">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <td>#</td>
+                        <td>عکس</td>
+                        <td>نام محصول</td>
+                        <td>تعداد</td>
+                        <td>قیمت</td>
+                        <td>مجموع</td>
+                    </tr>
+                </thead>
+                <tbody>
+                        @foreach(var item in Model)
+                        {
+                            
+                                counter+=1;
+                            
+                            <tr>
+                                <td>@counter</td>
+                                <td><img style="width:150px;height:150px" src="@StaticDetails.ProductThumbPath@item.MainImage"/></td>
+                                <td>@item.ProductTitle</td>
+                                <td>@item.Count</td>
+                                <td>@item.Price</td>
+                                <td>@item.TotalPrice</td>
+                            </tr>
+                        }
+                    </tbody>
+            </table>
+            </div>
+        </div>
+    </div>
+
+
+    </div>

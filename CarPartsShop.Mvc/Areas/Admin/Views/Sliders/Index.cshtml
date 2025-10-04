@@ -1,0 +1,49 @@
+﻿@using CarPartsShop.Application.Statics
+@using CarPartsShop.Application.ViewModels.Sliders
+@model List<SliderViewModel>
+@{
+    ViewData["Title"] = "اسلایدر";
+    int counter = 0;
+}
+<h4>@ViewData["Title"]</h4>
+
+<a class="btn btn-success" href="javascript:void(0)" onclick="loadAddSliderModal()">افزودن</a>
+<div class="row" id="slider-div">
+    @if (Model != null && Model.Any())
+    {
+        <div class="card mt-2">
+            <div class="table-responsive text-nowrap">
+
+                <table class="table">
+                    <thead>
+                        <tr class="text-nowrap">
+                            <th>#</th>
+                            <th>عکس</th>
+                            <th>اولویت</th>
+                            <th>عملیات</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model)
+                        {
+                            counter++;
+                            <tr id="slider-@item.Id">
+                                <th scope="row">@counter</th>
+                                <td><img src="@StaticDetails.SliderThumbPath@item.ImageName" style="width:150px;height:150px" /></td>
+                                <td>@item.Priority</td>
+                                <td>
+                                    <a href="javascript:void(0)" onclick="removeSlider('@item.Id')" class="btn btn-danger">حذف</a>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    }
+    else
+    {
+        <p class="alert alert-info">موردی جهت نمایش وجود ندارد</p>
+    }
+</div>
+

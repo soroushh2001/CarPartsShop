@@ -1,0 +1,31 @@
+﻿@model CarPartsShop.Application.ViewModels.Common.PaginationPartialViewModel
+
+<div class="col-12">
+    <nav class="d-flex justify-content-center" aria-label="navigation">
+        <!-- Pagination 1 2 3  -->
+        <ul class="pagination pagination-bordered justify-content-center d-inline-block d-lg-flex">
+
+            @if (Model.HasPreviousPage)
+            {
+                <li class="page-item">
+                    <a class="page-link" onclick="submitPagingForm('@(Model.PageIndex - 1)')" href="javascript:void(0);">قبلی</a>
+                </li>
+            }
+          
+            @foreach(var page in Model.VisiblePages)
+            {
+                <li class="page-item @(page == Model.PageIndex ? "active" : "")"> <a class="page-link" onclick="submitPagingForm('@(page)')" href="javascript:void(0);">@(page)</a></li>
+
+            }
+
+            @if (Model.HasNextPage)
+            {
+                <li class="page-item">
+                    <a class="page-link" onclick="submitPagingForm('@(Model.PageIndex + 1)')" href="javascript:void(0);">بعدی</a>
+                </li>
+            }
+
+          
+        </ul>
+    </nav>
+</div>

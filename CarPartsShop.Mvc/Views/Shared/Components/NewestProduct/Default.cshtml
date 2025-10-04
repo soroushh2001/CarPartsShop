@@ -1,0 +1,63 @@
+﻿@using CarPartsShop.Application.Statics
+@using CarPartsShop.Application.ViewModels.Products
+@model List<ProductViewModel>
+@if (Model != null && Model.Any())
+{
+<section class="pt-0 pt-md-5">
+	<div class="container">
+		<!-- Title -->
+		<div class="d-sm-flex justify-content-between align-items-center mb-4">
+			<h3 class="m-0">جدیدترین ترین کالاها</h3>
+			<a href="/products" class="text-body small"><u>مشاهده همه</u></a>
+		</div>
+
+		<!-- Product START -->
+		<div class="row g-4">
+
+		
+				@foreach (var item in Model)
+				{
+					<!-- Product item START -->
+					<div class="col-sm-6 col-md-4 col-lg-3">
+						<div class="card border p-3 h-100">
+							<!-- Image -->
+							<a href="/products/details/@item.Slug"><img class="card-img" src="@StaticDetails.ProductOrgImagePath@item.MainImage" alt="@item.Title"></a>
+
+							<!-- Card body -->
+							<div class="card-body text-center p-3 px-0">
+
+								<!-- Title -->
+								<h5 class="card-title"><a href="/products/details/@item.Slug">@item.Title</a></h5>
+								<h6 class="mb-0 text-success">@item.Price.ToString("#,0") تومان</h6>
+							</div>
+
+							<!-- Card footer -->
+							@if (item.IsExisted)
+							{
+								<div class="card-footer text-center p-0">
+									<!-- Button -->
+									<a href="javascript:void(0)" onclick="addToCart('@item.Id')" class="btn btn-sm btn-primary-soft mb-0"><i class="bi bi-cart me-2"></i>افزودن به سبد</a>
+								</div>
+							}
+							else
+							{
+								<div class="card-footer text-center p-0">
+									<!-- Button -->
+									<p>ناموجود</p>
+								</div>
+							}
+						</div>
+					</div>
+					<!-- Product item END -->
+				}
+			
+
+
+
+		</div>
+		<!-- Product END -->
+	</div>
+</section>
+<!-- =======================
+Newest product END -->
+}

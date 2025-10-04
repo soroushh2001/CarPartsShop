@@ -1,0 +1,47 @@
+﻿@model CarPartsShop.Application.ViewModels.Orders.RecipientInfoViewModel
+
+    <div class="modal-header">
+
+        <h5 class="modal-title" id="exampleModalLabel1">مشخصات خریدار سفارش @Model.RefId</h5>
+
+
+
+
+        <button type="button" class="btn-close new-style10" data-bs-dismiss="modal" aria-label="Close"></button>
+    </div>
+
+    <div class="modal-body">
+        <div class="row">
+            <div class="col mb-3">
+                <label for="nameBasic" class="form-label">آدرس</label>
+                <label>@Model.Address</label>
+            </div>
+        </div>
+
+    <div class="row">
+        <div class="col mb-3">
+            <label for="nameBasic" class="form-label">کد پستی</label>
+            <label>@Model.ZipCode</label>
+        </div>
+    </div>
+
+
+    <div class="row">
+        <div class="col mb-3">
+            <label for="nameBasic" class="form-label">تلفن همراه</label>
+            <label>@Model.PhoneNumber</label>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col mb-3">
+            <label for="nameBasic" class="form-label">تحویل گیرنده</label>
+            <label>@Model.RecipientName</label>
+        </div>
+    </div>
+
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">بستن</button>
+    </div>
+

@@ -1,0 +1,72 @@
+﻿@using CarPartsShop.Application.Statics
+@using CarPartsShop.Application.ViewModels.Orders
+@model List<OrderDetailsViewModel>
+@{
+    ViewData["Title"] = $"مشاهده سفارش {ViewBag.OrderId}";
+}
+
+@if (Model != null && Model.Any())
+{
+    <section class="pt-3 pt-lg-5">
+        <div class="container">
+            <div class="row g-4 g-lg-5">
+
+                <!-- Left side START -->
+                <div class="col-lg-8">
+                    <!-- My Cart START -->
+                    <div class="card bg-transparent">
+                        <!-- Card header -->
+                        <div class="card-header border-bottom d-flex justify-content-between align-items-center px-0 pb-3">
+                            <h4 class="card-title mb-0">سفارشات</h4>
+                            <span>@Model.Count</span>
+                        </div>
+
+                        <!-- Card body -->
+                        <div class="card-body p-0 pt-4">
+                            <!-- Product item START -->
+                            @foreach (var item in Model)
+                            {
+                                <div class="row" id="cart-div">
+                                    <!-- Image -->
+                                    <div class="col-5 col-md-2">
+                                        <div class="bg-light p-2 rounded-2">
+                                            <img src="@StaticDetails.ProductOrgImagePath@item.MainImage" alt="">
+                                        </div>
+                                    </div>
+
+                                    <div class="col-7 col-md-10">
+                                        <div class="row g-2">
+                                            <!-- Content -->
+                                            <div class="col-md-7">
+                                                <!-- Product detail START -->
+                                                <h5 class="mb-1"><a href="#">@item.ProductTitle</a></h5>
+                                                <!-- List -->
+                                                <h3 class="text-success">تعداد: @item.Count</h3>
+                                            </div>
+
+
+                                            <!-- Price and button -->
+                                            <div class="col-md-3 text-md-end">
+
+                                                <h5>@item.Price.ToString("#,0")</h5>
+                                                <h5>جمع کل: @((item.Price * item.Count).ToString("#,0"))</h5>
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+
+                        <!-- Card footer -->
+                    </div>
+                    <!-- My Cart END -->
+                </div>
+                <!-- Left side END -->
+
+
+            </div>
+        </div>
+    </section>
+
+}

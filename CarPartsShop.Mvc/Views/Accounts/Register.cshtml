@@ -1,0 +1,54 @@
+﻿@using CarPartsShop.Application.ViewModels.Accounts
+@model RegisterUserViewModel
+@{
+	ViewData["Title"] = "ثبت نام";
+	Layout = "_AuthLayout";
+}
+
+
+<section>
+	<div class="container">
+		<div class="row">
+			<div class="col-md-10 col-lg-8 col-xl-6 mx-auto">
+				<div class="bg-primary bg-opacity-10 rounded p-4 p-sm-5">
+					<h2>ثبت نام در سایت </h2>
+					<!-- Form START -->
+					<form method="post" class="mt-4">
+						<input type="hidden" asp-for="Captcha" />
+
+						<!-- Email -->
+						<div class="mb-3">
+							<label class="form-label" for="exampleInputEmail1">ایمیل</label>
+							<input type="email" asp-for="Email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="ایمیل">
+							<small id="emailHelp" class="form-text">ما هرگز ایمیل شما را با دیگران به اشتراک نمی گذاریم.</small>
+						</div>
+						<!-- Password -->
+						<div class="mb-3">
+							<label class="form-label" for="exampleInputPassword1">کلمه عبور</label>
+							<input type="password" asp-for="Password" class="form-control" id="exampleInputPassword1" placeholder="*********">
+						</div>
+						<!-- Password -->
+						<div class="mb-3">
+							<label class="form-label" for="exampleInputPassword2">تکرار کلمه عبور</label>
+							<input type="password" asp-for="ConfirmPassword" class="form-control" id="exampleInputPassword2" placeholder="*********">
+						</div>
+
+						<div class="text-danger" asp-validation-summary="All"></div>
+						<!-- Button -->
+						<div class="row align-items-center">
+							<div class="col-sm-4">
+								<button type="submit" class="btn btn-success">ثبت نام</button>
+							</div>
+							<div class="col-sm-8 text-sm-end">
+								<span>آیا قبلا ثبت نام کرده اید؟ <a asp-controller="Accounts" asp-action="Login"><u>ورود</u></a></span>
+							</div>
+						</div>
+					</form>
+					<!-- Form END -->
+					<hr>
+				</div>
+			</div>
+		</div>
+	</div>
+</section>
+

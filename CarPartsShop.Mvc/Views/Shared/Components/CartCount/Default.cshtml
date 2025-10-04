@@ -1,0 +1,13 @@
+﻿@model int
+<div id="cart-counter" class="nav-item position-relative ms-3">
+    <a class="nav-link btn btn-light btn-round mb-0" href="/cart">
+        <i class="bi bi-cart3 fa-fw"></i>
+    </a>
+    @if (User.Identity.IsAuthenticated)
+    {
+        <span  class="position-absolute top-0 start-100 translate-middle badge smaller rounded-circle bg-dark mt-xl-2 ms-n1">
+            @Model
+        </span>
+    }
+
+</div>

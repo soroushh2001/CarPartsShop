@@ -1,0 +1,85 @@
+﻿@using CarPartsShop.Application.ViewModels.Orders
+@model CompleteOrderInformationViewModel
+@{
+	ViewData["Title"] = "تکمیل صورت حساب";
+	Layout = "_Layout";
+}
+
+<form method="post">
+	<input type="hidden" asp-for="Captcha" />
+	<section class="pt-3 pt-lg-5">
+		<div class="container">
+			<div class="row g-4 g-lg-5">
+
+				<!-- Left side START -->
+				<div class="col-lg-8">
+					<div class="vstack gap-3">
+
+						<!-- Your Order START -->
+						<div class="card bg-transparent">
+							<!-- Card header -->
+							<div class="card-header px-0 pb-3">
+								<h4 class="card-title mb-0">سفارشات</h4>
+							</div>
+
+							@await Component.InvokeAsync("CartItemsInCompleteInformation", ViewBag.OrderId)
+
+						</div>
+						<!-- Your Order END -->
+
+						<hr> <!-- Divider -->
+						<!-- Billing address START -->
+						<div class="card bg-transparent">
+							<!-- Card header -->
+							<div class="card-header px-0 pb-3">
+								<h4 class="card-title mb-0">صورت حساب</h4>
+							</div>
+
+							<!-- Card body -->
+							<div class="card-body p-0">
+
+
+								<div class="row g-3">
+									<div class="col-md-6">
+										<label class="form-label" asp-for="RecipientName"></label>
+										<input type="text" asp-for="RecipientName" class="form-control" aria-label="First name">
+										<span asp-validation-for="RecipientName" class="text-danger"></span>
+									</div>
+									<div class="col-md-6">
+										<label class="form-label" asp-for="PhoneNumber"></label>
+										<input type="text" asp-for="PhoneNumber" class="form-control" aria-label="First name">
+										<span asp-validation-for="PhoneNumber" class="text-danger"></span>
+									</div>
+
+									<div class="col-md-6">
+										<label class="form-label" asp-for="ZipCode"></label>
+										<input type="text" asp-for="ZipCode" class="form-control" aria-label="First name">
+										<span asp-validation-for="ZipCode" class="text-danger"></span>
+									</div>
+
+									<div class="col-md-6">
+										<label class="form-label" asp-for="Address"></label>
+										<input type="text" asp-for="Address" class="form-control" aria-label="First name">
+										<span asp-validation-for="Address" class="text-danger"></span>
+									</div>
+								</div>
+							</div>
+						</div>
+						<!-- Billing address END -->
+
+
+					</div>
+				</div>
+				<!-- Left side END -->
+				<!-- Right Side START -->
+				@await Component.InvokeAsync("TotalPriceInCompleteInformation")
+
+				<!-- Right Side END -->
+
+			</div>
+		</div>
+	</section>
+</form>
+@section Scripts{
+	<partial name="_Captcha" />
+}

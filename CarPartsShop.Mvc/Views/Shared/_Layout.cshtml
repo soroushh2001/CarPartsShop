@@ -1,0 +1,39 @@
+﻿
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+
+<head>
+	<title>کارپارتس شاپ | @ViewData["Title"]</title>
+
+	<partial name="_HeadReferences" />
+	@await RenderSectionAsync("Styles",required:false)
+</head>
+
+<body>
+	<!-- Preloader START -->
+	<div class="preloader">
+		<div class="loader">
+			<div class="sh1"></div>
+			<div class="sh2"></div>
+		</div>
+	</div>
+	<!-- Preloader END -->
+@await Component.InvokeAsync("Header")
+	<main>
+
+		@RenderBody()
+
+	</main>
+	<!-- **************** MAIN CONTENT END **************** -->
+	<!-- =======================
+@await Component.InvokeAsync("Footer")
+	<!-- Back to top -->
+	<div class="back-top"><i class="bi bi-arrow-up-short"></i></div>
+
+	<partial name="_Scripts" />
+	<partial name="_Toastr" />
+    
+	@await RenderSectionAsync("Scripts",false);
+</body>
+
+</html>

@@ -1,0 +1,113 @@
+﻿@using CarPartsShop.Application.Extensions
+@using CarPartsShop.Application.ViewModels.Accounts
+@model FilterUserViewModel
+@{
+    ViewData["Title"] = "مدیریت کاربران";
+    var counter = 0;
+}
+
+
+
+<form class="mt-2" method="get" id="filter-form">
+    <input type="hidden" id="PageIndex" name="PageIndex" value="@Model.Specification?.PageIndex" />
+    <div class="row" id="user-div">
+        <div class="card">
+            <h5 class="card-header">فیلتر</h5>
+            <div class="card-body">
+                <div class="row align-items-center g-3 mb-3">
+                    <div class="col-auto">
+                        <label class="form-label">جستجو</label>
+                        <input type="text" class="form-control form-control-sm" name="Search"
+                               value="@Model.Specification?.Search">
+                    </div>
+
+                    <div class="col-auto">
+                        <label class="form-label">مرتب‌سازی</label>
+                        <select class="form-select form-select-sm" name="OrderBy"
+                                asp-items="@ViewBag.OrderBySelectList"></select>
+                    </div>
+
+                   
+                    <div class="col-auto">
+                        <label class="form-label">نقش ها</label>
+                        <select class="form-select form-select-sm" name="Role" asp-items="@ViewBag.Roles">
+                            <option value="" selected>همه</option>
+                        </select>
+                    </div>
+
+
+                    <div class="col-auto align-self-end">
+                        <button onclick="submitPagingForm()" class="btn mt-3 btn-sm btn-info">فیلتر</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        @if (Model.Users?.Items != null && Model.Users.Items.Any())
+        {
+            <div class="card mt-2">
+                <div class="table-responsive text-nowrap">
+
+
+                    <table class="table">
+                        <thead>
+                            <tr class="text-nowrap">
+                                <th>#</th>
+                                <th>ایمیل</th>
+                                <th>تاریخ ثبت نام</th>
+                                <th>نقش ها</th>
+                                <th>دسترسی</th>
+                                <th>عملیات</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model.Users.Items)
+                            {
+                                counter++;
+                                <tr>
+                                    <th scope="row">@counter</th>
+                                    <td>@item.Email</td>
+                                    <td>@item.RegisteredDate.ToShamsiDate()</td>
+                                    <td>
+                                        @string.Join("-",item.Roles)
+
+                                    </td>
+                                    <td>
+                                        @if (item.IsLockedOut)
+                                        {
+                                            <span class="text-danger">دسترسی محدود شده</span>
+                                        }
+                                        else
+                                        {
+                                            <span class="text-success">عادی</span>
+                                        }
+                                    </td>
+                                    <td>
+
+                                        <a class="btn btn-warning" href="javascript:void(0)" onclick="loadManageUserRolesModal('@item.Email')">
+مدیریت نقش ها
+                                        </a>
+
+                                        <a class="btn @(item.IsLockedOut ? "btn-success" : "btn-danger")" href="/Admin/Users/LockUnlock/?email=@item.Email">
+                                            تغییر وضعیت دسترسی
+                                        </a>
+                                        <a class="btn btn-info" href="javascript:void(0)" onclick="loadChangeUserPasswordModal('@item.Email')">
+تغییر کلمه عبور                                        </a>
+                                        <a></a>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                    <partial name="_AdminPaging"
+                             model="Model.Users.ToPaginationPartial(Model.Specification!.PageIndex)" />
+                </div>
+            </div>
+        }
+        else
+        {
+            <p class="alert alert-info mt-2">موردی جهت نمایش وجود ندارد</p>
+        }
+    </div>
+
+</form>

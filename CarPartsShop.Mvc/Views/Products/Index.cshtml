@@ -1,0 +1,88 @@
+﻿@using CarPartsShop.Application.Statics
+@using CarPartsShop.Application.ViewModels.Products
+@model FilterProductViewModel
+@{
+    ViewData["Title"] = "محصولات";
+}
+
+
+<form method="get" id="filter-form" asp-controller="Products" asp-action="Index" asp-area="">
+	<input type="hidden" id="PageIndex" name="PageIndex" value="@Model.Specification?.PageIndex" />
+	<section class="pt-3 pt-lg-5">
+		<div class="container">
+			<div class="row">
+				<!-- Title -->
+				<div class="mb-4">
+					<h2 class="m-0">جستجو محصول</h2>
+				</div>
+
+				@await Component.InvokeAsync("FilterProductsRightSideBar", Model.Specification)
+
+				<!-- Main part START -->
+				<div class="col-xl-9">
+
+
+					@await Component.InvokeAsync("MainFilterProducts", Model.Specification)
+
+					<!-- Product START -->
+					<div class="row g-4">
+
+
+						@if (Model.Products.Items!=null && Model.Products.Items.Any())
+						{
+							foreach(var item in Model.Products.Items)
+							{
+								<!-- Product item START -->
+								<div class="col-sm-6 col-md-4">
+									<div class="card border p-3 h-100">
+										<!-- Image -->
+										<a href="/products/details/@item.Slug"><img class="card-img" src="@StaticDetails.ProductThumbPath@item.MainImage" alt=""></a>
+
+										<!-- Card body -->
+										<div class="card-body text-center p-3 px-0">
+										
+											<!-- Title -->
+											<h5 class="card-title"><a href="/products/details/@item.Slug">@item.Title</a></h5>
+											<h6 class="mb-0 @(item.IsExisted ? "text-success" : "text-danger")">
+												@if (item.IsExisted)
+												{
+													@item.Price.ToString("#,0") <text>تومان</text>
+												}
+												else
+												{
+													<text>ناموجود</text>
+												}
+											</h6>
+										</div>
+
+										<!-- Card footer -->
+										@if (item.IsExisted)
+										{
+											<div class="card-footer text-center p-0">
+												<!-- Button -->
+												<a href="javscript:void(0)"
+												   onclick="addToCart('@item.Id')"
+												class="btn btn-sm btn-primary-soft mb-0"><i class="bi bi-cart me-2"></i>افزودن به سبد</a>
+											</div>
+										}
+									</div>
+								</div>
+								<!-- Product item END -->
+							}
+						}
+						else
+						{
+							<p class="alert alert-info">محصولی جهت نمایش وجود ندارد</p>
+						}
+						<!-- Pagination START -->
+						<partial name="_ProductsPaging" model="Model.Products.ToPaginationPartial(Model.Specification!.PageIndex)" />
+						<!-- Pagination END -->
+					</div>
+					<!-- Product END -->
+
+				</div>
+				<!-- Main part END -->
+			</div>
+		</div>
+	</section>
+</form>

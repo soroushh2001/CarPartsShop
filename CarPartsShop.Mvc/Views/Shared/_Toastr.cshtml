@@ -1,0 +1,25 @@
+﻿@using CarPartsShop.Mvc.Helpers
+@if (TempData[ToastrMessages.SuccessMessage] != null)
+{
+    <script>
+        toastr.success('@TempData[ToastrMessages.SuccessMessage]', '');
+    </script>
+}
+@if (TempData[ToastrMessages.ErrorMessage] != null)
+{
+     <script>
+        toastr.error('@TempData[ToastrMessages.ErrorMessage]', '');
+    </script>
+}
+@if (TempData[ToastrMessages.InfoMessage] != null)
+{
+    <script>
+        toastr.info('@TempData[ToastrMessages.InfoMessage]', '');
+    </script>
+}
+@if (TempData[ToastrMessages.WarningMessage] != null)
+{
+    <script>
+        toastr.info('@TempData[ToastrMessages.WarningMessage]', '');
+    </script>
+}

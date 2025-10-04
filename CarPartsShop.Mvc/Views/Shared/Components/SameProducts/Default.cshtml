@@ -1,0 +1,72 @@
+﻿@using CarPartsShop.Application.Statics
+@using CarPartsShop.Application.ViewModels.Products
+@using CarPartsShop.Domain.Entities.Shop
+@model List<ProductViewModel>
+
+@if(Model!=null && Model.Any())
+{
+	<section class="pt-0 pt-md-5">
+		<div class="container">
+			<!-- Title -->
+			<div class="mb-4">
+				<h2 class="mb-0">کالاهای مشابه</h2>
+			</div>
+
+			<div class="row g-4">
+				<!-- Slider item START -->
+				<div class="col-md-12">
+					<div class="tiny-slider arrow-hover arrow-dark arrow-blur arrow-round">
+						<div class="tns-outer" id="tns1-ow">
+							<div class="tns-liveregion tns-visually-hidden" aria-live="polite" aria-atomic="true"><span class="current">14 to 19</span>  از 5</div><div id="tns1-mw" class="tns-ovh">
+								<div class="tns-inner" id="tns1-iw">
+									<div class="tiny-slider-inner  tns-slider tns-carousel tns-subpixel tns-calc tns-horizontal" data-autoplay="false" data-hoverpause="true" data-gutter="24" data-edge="2" data-arrow="true" data-dots="false" data-items-xl="4" data-items-lg="3" data-items-md="2" data-items-xs="1" id="tns1" style="transform: translate3d(60.8696%, 0px, 0px);">
+
+
+										@foreach(var item in Model)
+										{
+											<div class="tns-item" id="tns1-item1" aria-hidden="true" tabindex="-1">
+												<div class="card border p-3 h-100">
+													<!-- Image -->
+													<a href="/products/details/@item.Slug"><img class="card-img" src="@StaticDetails.ProductOrgImagePath@item.MainImage" alt=""></a>
+
+													<!-- Card body -->
+													<div class="card-body text-center p-3 px-0">
+														<!-- Badge and price -->
+								
+														<!-- Title -->
+														<h5 class="card-title"><a href="/products/details/@item.Slug">@item.Title</a></h5>
+														<h6 class="mb-0 @(item.IsExisted ? "text-success" : "text-danger")">
+															@(item.IsExisted?$"{item.Price.ToString("#,0")} تومان":"ناموجود")
+														</h6>
+													</div>
+
+													@if (item.IsExisted)
+													{
+														<div class="card-footer text-center p-0">
+															<!-- Button -->
+															<a href="javascript:void(0)" onclick="addToCart('@item.Id')" class="btn btn-sm btn-primary-soft mb-0"><i class="bi bi-cart me-2"></i>افزودن به سبد</a>
+														</div>
+													}
+													else
+													{
+														<div class="card-footer text-center p-0">
+															<!-- Button -->
+															<p>ناموجود</p>
+														</div>
+													}
+												</div>
+											</div>
+
+										}
+
+									</div>
+								</div>
+							</div><div class="tns-controls" aria-label="Carousel Navigation" tabindex="0"><button type="button" data-controls="prev" tabindex="-1" aria-controls="tns1"><i class="fas fa-chevron-left"></i></button><button type="button" data-controls="next" tabindex="-1" aria-controls="tns1"><i class="fas fa-chevron-right"></i></button></div>
+						</div>
+					</div>
+				</div>
+				<!-- Slider item END -->
+			</div>
+		</div>
+	</section>
+}

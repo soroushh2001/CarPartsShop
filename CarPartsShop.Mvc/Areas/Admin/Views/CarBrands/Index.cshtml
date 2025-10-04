@@ -1,0 +1,95 @@
+﻿@model List<CarPartsShop.Application.ViewModels.CarBrands.CarBrandViewModel>
+@{
+    ViewData["Title"] = "برندها";
+    int counter = 0;
+}
+
+<h4>@ViewData["Title"]</h4>
+
+<a class="btn btn-success" href="javascript:void(0)" onclick="loadCreateBrandModal()">افزودن</a>
+<div class="row" id="brands-div">
+    @if (Model!=null && Model.Any())
+    {
+        <div class="card mt-2">
+            <div class="table-responsive text-nowrap">
+
+                <table class="table">
+                    <thead>
+                        <tr class="text-nowrap">
+                            <th>#</th>
+                            <th>عنوان</th>
+                            <th>زیر برندها</th>
+                            <th>عملیات</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model.Where(x=> x.ParentId == null))
+                        {
+                            counter++;
+                            <tr id="brand-@item.Id">
+                                <th scope="row">@counter</th>
+                                <td>@item.Title</td>
+                             <td>
+                                    @if(Model.Any(x=> x.ParentId == item.Id))
+                                    {
+                                        <ul>
+                                            @foreach(var subItem in Model.Where(x=> x.ParentId == item.Id))
+                                            {
+                                                <li class="mt-1">
+                                                    <span>@subItem.Title</span>
+                                                    <a href="javascript:void(0)" onclick="loadEditBrandModal('@subItem.Id','@subItem.Title')"
+                                                       class="btn btn-sm btn-warning">ویرایش</a>
+                                                    @if (subItem.IsDeleted)
+                                                    {
+                                                        <a href="javascript:void(0)" onclick="toggleDeleteBrand('@subItem.Id','@subItem.Title',true)"
+                                                           class="btn btn-sm btn-info">بازگردانی</a>
+
+                                                    }
+                                                    else
+                                                    {
+                                                        <a href="javascript:void(0)" onclick="toggleDeleteBrand('@subItem.Id','@subItem.Title',false)"
+                                                           class="btn btn-sm btn-danger">حذف</a>
+
+                                                    }
+                                                </li>
+                                            }
+                                        </ul>
+                                    }
+                                    else
+                                    {
+                                        <p>فاقد زیر برند</p>
+                                    }
+                                </td>
+
+                                <td>
+                                    <a class="btn btn-success" href="javascript:void(0)" onclick="loadCreateBrandModal('@item.Id','@item.Title')">
+                                        افزودن
+                                        زیر برند
+                                    </a>
+                                    <a class="btn btn-warning" href="javascript:void(0)" onclick="loadEditBrandModal('@item.Id')">ویرایش</a>
+
+                                    @if (item.IsDeleted)
+                                    {
+                                        <a class="btn btn-info" href="javascript:void(0)"
+                                           onclick="toggleDeleteBrand('@item.Id','@item.Title',true)">بازگردانی</a>
+                                    }
+                                    else
+                                    {
+                                        <a class="btn btn-danger" href="javascript:void(0)"
+                                           onclick="toggleDeleteBrand('@item.Id','@item.Title',false)">حذف</a>
+                                    }
+
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    }
+    else
+    {
+        <p class="alert alert-info">موردی جهت نمایش وجود ندارد</p>
+    }
+</div>
+

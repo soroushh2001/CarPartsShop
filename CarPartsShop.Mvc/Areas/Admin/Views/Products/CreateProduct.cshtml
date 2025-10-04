@@ -1,0 +1,179 @@
+﻿@using CarPartsShop.Application.ViewModels.CarBrands
+@using CarPartsShop.Application.ViewModels.Categories
+@using CarPartsShop.Application.ViewModels.Products
+@using CarPartsShop.Domain.Entities.Shop
+@model CreateProductViewModel
+@{
+    ViewData["Title"] = "افزودن محصول";
+    var categories = ViewBag.Categories as List<CategoryViewModel>;
+    var carBrands = ViewBag.CarBrands as List<CarBrandViewModel>;
+}
+
+
+
+<div class="row">
+    <!-- Basic Layout -->
+    <div class="col-md-12">
+        <div class="card mb-4">
+            <div class="card-header d-flex align-items-center justify-content-between">
+                <h5 class="mb-0">افزودن محصول</h5>
+            </div>
+            <div class="card-body">
+                <form method="post" enctype="multipart/form-data">
+                    <div class="row mb-3">
+                        <label class="col-sm-2 col-form-label" asp-for="Title"></label>
+                        <div class="col-sm-10">
+                            <input asp-for="Title" class="form-control">
+                        </div>
+                    </div>
+
+
+                    <div class="row mb-3">
+                        <label class="col-sm-2 col-form-label" asp-for="SelecetedBrandsIds"></label>
+                        <div class="col-sm-10">
+                            @if (carBrands != null)
+                            {
+                                foreach (var brand in carBrands.Where(x=> x.ParentId == null))
+                                {
+                                    <ul>
+                                        <li>
+                                            <div class="form-check mt-3">
+                                                <input class="form-check-input" type="checkbox" value="@brand.Id" name="SelecetedBrandsIds">
+                                                <label class="form-check-label" for="defaultCheck1">
+                                                    @brand.Title
+                                                </label>
+                                            </div>
+                                            <ul>
+                                                @foreach (var subBrand in carBrands.Where(c => c.ParentId == brand.Id))
+                                                {
+                                                    <li>
+                                                        <div class="form-check mt-3">
+                                                            <label class="form-check-label" for="defaultCheck1">
+                                                                @subBrand.Title
+                                                            </label>
+                                                            <input class="form-check-input" type="checkbox" value="@subBrand.Id" name="SelecetedBrandsIds">
+
+                                                        </div>
+                                                    </li>
+                                                }
+                                            </ul>
+                                        </li>
+                                    </ul>
+                                }
+                            }
+
+                        </div>
+                    </div>
+
+
+
+                    <div class="row mb-3">
+                        <label class="col-sm-2 col-form-label" asp-for="Price"></label>
+                        <div class="col-sm-10">
+                            <input type="text" asp-for="Price" class="form-control">
+                        </div>
+                    </div>
+
+
+                    <div class="row mb-3">
+                        <label class="col-sm-2 col-form-label" asp-for="ProductQuality"></label>
+                        <div class="col-sm-10">
+                           <select class="form-select" asp-for="ProductQuality" asp-items="@Html.GetEnumSelectList<ProductQuality>()"></select>
+                        </div>
+                    </div>
+
+                    <div class="row mb-3">
+                        <div class="col-sm-10">
+                            <div class="form-check mt-3">
+                                <input class="form-check-input" type="checkbox" asp-for="IsExisted">
+                                <label class="form-check-label" for="defaultCheck1">
+                                    وضعیت موجودی
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row mb-3">
+                        <label class="col-sm-2 col-form-label" asp-for="SelecetCategoryIds"></label>
+                        <div class="col-sm-10">
+                            @if (categories != null)
+                            {
+                                foreach (var category in categories.Where(c => c.ParentId == null))
+                                {
+                                    <ul>
+                                        <li>
+                                            <div class="form-check mt-3">
+                                                <input class="form-check-input" type="checkbox" value="@category.Id" name="SelecetCategoryIds">
+                                                <label class="form-check-label" for="defaultCheck1">
+                                                    @category.Title
+                                                </label>
+                                            </div>
+                                            <ul>
+                                                @foreach (var subCategory in categories.Where(c => c.ParentId == category.Id))
+                                                {
+                                                    <li>
+                                                        <div class="form-check mt-3">
+                                                            <label class="form-check-label" for="defaultCheck1">
+                                                                @subCategory.Title
+                                                            </label>
+                                                            <input class="form-check-input" type="checkbox" value="@subCategory.Id" name="SelecetCategoryIds">
+                                                      
+                                                        </div>
+                                                    </li>
+                                                }
+                                            </ul>
+                                        </li>
+                                    </ul>
+                                }
+                            }
+
+                        </div>
+                    </div>
+
+                    <div class="row mb-3">
+                        <label class="col-sm-2 col-form-label" asp-for="MainImage"></label>
+                        <div class="col-sm-10">
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <input type="file" accept=".jpeg,.png,.webp,jpg" name="MainImage" class="form-control" image-input="1">
+                                </div>
+                                <div class="col-md-8">
+                                    <img style="display: none;width: 200px;height: 200px" image-preview="1" />
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+
+                    
+                    <div class="row mb-3">
+                        <label class="col-sm-2 col-form-label" asp-for="ShortDescription"></label>
+                        <div class="col-sm-10">
+                            <textarea class="tinymce" asp-for="ShortDescription"></textarea>
+                        </div>
+                    </div>
+
+
+                    <div class="row mb-3">
+                        <label class="col-sm-2 col-form-label" asp-for="Description"></label>
+                        <div class="col-sm-10">
+                            <textarea class="tinymce" asp-for="Description"></textarea>
+                        </div>
+                    </div>
+
+
+                    <div asp-validation-summary="All" class="text-danger"></div>
+
+                    <div class="row justify-content-end">
+                        <div class="col-sm-10">
+                            <button type="submit" class="btn btn-primary">ثبت</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+</div>

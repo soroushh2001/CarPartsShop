@@ -1,0 +1,16 @@
+﻿@model CarPartsShop.Application.ViewModels.Comments.CreateCommentViewModel
+
+<!-- Collapse body -->
+<div class="collapse" id="collapseExample" style="">
+	<div class="card card-body">
+		<form asp-controller="Products" asp-area="" asp-action="AddComment">
+			<input type="hidden" asp-for="ProductSlug" />
+
+			<input type="hidden" asp-for="ProductId"/>
+			<!-- Text area -->
+			<textarea class="form-control mb-3" asp-for="Message" rows="3"></textarea>
+			<!-- Button -->
+			<button type="submit" class="btn btn-primary mb-0">ثبت نظر <i class="bi fa-fw bi-arrow-right ms-2"></i></button>
+		</form>
+	</div>
+</div>

@@ -1,0 +1,47 @@
+﻿@using CarPartsShop.Application.Extensions
+@using CarPartsShop.Application.ViewModels.Orders
+@using CarPartsShop.Mvc.Helpers
+@model List<UserOrderViewModel>
+@{
+    ViewData["Title"] = "سفارشات";
+}
+
+<section>
+	<div class="container">
+		<div class="row">
+			<div class="col-12 text-center">
+				@if(Model!=null && Model.Any())
+				{
+					<table class="table table-striped">
+						<thead>
+							<tr>
+								<td>کد رهگیری</td>
+								<td>تاریخ پرداخت</td>
+								<td>وضعیت سفارش</td>
+								<td>پرداختی</td>
+								<td>مشاهده</td>
+							</tr>
+						</thead>
+						<tbody>
+							@foreach(var item in Model)
+							{
+								<tr>
+									<td>@item.RefId</td>
+									<td>@item.PaymentDate?.ToShamsiDate()</td>
+									<td>@item.OrderStatus.GetDisplayName()</td>
+									<td>@item.Sum</td>
+									<td><a href="/show-order/@item.OrderId" class="btn btn-info">مشاهده</a></td>
+								</tr>
+							}
+						</tbody>
+					</table>
+
+				}
+				else
+				{
+					<p class="alert alert-info">موردی جهت نمایش وجود ندارد</p>
+				}
+			</div>
+		</div>
+	</div>
+</section>

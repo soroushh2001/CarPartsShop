@@ -1,0 +1,55 @@
+﻿@using CarPartsShop.Domain.Entities.Account
+@model CarPartsShop.Application.ViewModels.Accounts.ManageUserRolesViewModel
+@{
+    var roles = ViewBag.Roles as List<ApplicationRole>;
+}
+
+<form id="ManageUserRoles-form" asp-area="Admin" asp-action="SubmitManageUserRolesModal" asp-controller="Users"
+      data-ajax="true" data-ajax-begin="startWaiting()" data-ajax-success="submitManageUserRolesModal">
+    <input type="hidden" asp-for="Email" />
+    <div class="modal-header">
+   
+            <h5 class="modal-title" id="exampleModalLabel1">مدیریت نقش های  @Model.Email</h5>
+
+       
+        
+
+        <button type="button" class="btn-close new-style10" data-bs-dismiss="modal" aria-label="Close"></button>
+    </div>
+
+    <div class="modal-body">
+
+
+        <div class="row mb-3">
+            <label class="col-sm-2 col-form-label" asp-for="SelectedRoles"></label>
+            <div class="col-sm-10">
+                @if (roles != null)
+                {
+                    foreach (var role in roles)
+                    {
+                        <ul>
+                            <li>
+                                <div class="form-check mt-3">
+                                    <input class="form-check-input" type="checkbox" value="@role.Name"
+                                           @(Model.SelectedRoles!.Contains(role.Name) == true ? "checked" : "")
+                                    name="SelectedRoles">
+                                    <label class="form-check-label" for="defaultCheck1">
+                                        @role.Title
+                                    </label>
+                                </div>
+
+                            </li>
+                        </ul>
+                    }
+                }
+                <span asp-validation-for="SelectedRoles"></span>
+            </div>
+        </div>
+
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">بستن</button>
+        <button type="submit" class="btn btn-primary">ثبت</button>
+    </div>
+</form>
+

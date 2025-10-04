@@ -1,0 +1,130 @@
+﻿@using CarPartsShop.Application.Extensions
+@using CarPartsShop.Application.ViewModels.Products
+@using CarPartsShop.Mvc.Helpers
+@model FilterProductViewModel
+@{
+    ViewData["Title"] = "محصولات";
+    var counter = 0;
+}
+
+
+
+<form class="mt-2" method="get" id="filter-form">
+    <input type="hidden" id="PageIndex" name="PageIndex" value="@Model.Specification?.PageIndex" />
+    <div class="row">
+        <div class="card">
+            <h5 class="card-header">فیلتر</h5>
+            <div class="card-body">
+                <div class="row align-items-center g-3 mb-3">
+                    <div class="col-auto">
+                        <label class="form-label">جستجو</label>
+                        <input type="text" class="form-control form-control-sm" name="Search"
+                               value="@Model.Specification?.Search">
+                    </div>
+
+                    <div class="col-auto">
+                        <label class="form-label">مرتب‌سازی</label>
+                        <select class="form-select form-select-sm" name="SortBy"
+                                asp-items="@ViewBag.SortBySelectList"></select>
+                    </div>
+
+                    <div class="col-auto">
+                        <label class="form-label">ترتیب</label>
+                        <select class="form-select form-select-sm" name="OrderBy"
+                                asp-items="@ViewBag.OrderBySelectList"></select>
+                    </div>
+
+                    <div class="col-auto">
+                        <label class="form-label">دسته‌بندی</label>
+                        <select class="form-select form-select-sm" name="CategoryTitle" asp-items="@ViewBag.Categories">
+                            <option value="" selected>همه</option>
+                        </select>
+                    </div>
+
+             
+
+                    <div class="col-auto">
+                        <label class="form-label">قیمت</label>
+                        <div class="d-flex align-items-center gap-2">
+                            <input type="text" class="form-control form-control-sm" name="MinPrice"
+                                   value="@Model.Specification?.MinPrice" placeholder="از">
+                            <span>تا</span>
+                            <input type="text" class="form-control form-control-sm" name="MaxPrice"
+                                   value="@Model.Specification?.MaxPrice" placeholder="تا">
+                        </div>
+                    </div>
+                    <div class="col-auto align-self-end">
+                        <button onclick="submitPagingForm()" class="btn mt-3 btn-sm btn-info">فیلتر</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-2">
+                <a asp-area="Admin" asp-controller="Products" asp-action="CreateProduct" class="btn btn-success mt-2">افزودن</a>
+            </div>
+        </div>
+
+        @if (Model.Products?.Items != null && Model.Products.Items.Any())
+        {
+            <div class="card mt-2">
+                <div class="table-responsive text-nowrap">
+
+
+                    <table class="table">
+                        <thead>
+                            <tr class="text-nowrap">
+                                <th>#</th>
+                                <th>عنوان</th>
+                                <th>قیمت</th>
+                                <th>کیفیت</th>
+                                <th>تاریخ آخرین بروزرسانی</th>
+                                <th>وضعیت</th>
+                                <th>عملیات</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model.Products.Items)
+                            {
+                                counter++;
+                                <tr>
+                                    <th scope="row">@counter</th>
+                                    <td>@item.Title</td>
+                                    <td>@item.Price.ToString("#,0") تومان</td>
+                                    <td>@item.Quality.GetDisplayName()</td>
+                                    <td>@item.LastModifiedDate.ToShamsiDate()</td>
+                                    <td>
+                                        @if (item.IsExisted)
+                                        {
+                                            <span class="text-success">موجود</span>
+                                        }
+                                        else
+                                        {
+                                            <span class="text-danger">ناموجود</span>
+                                        }
+                                    </td>
+                                    <td>
+                                        <a asp-area="Admin" asp-controller="Products" asp-action="EditProduct"
+                                           asp-route-id="@item.Id"
+                                           class="btn btn-warning">ویرایش</a>
+                                        <a href="javascript:void(0)"
+                                           onclick="changeProductAvailabilityStatus('@item.Id','@item.Title')"
+                                           class="btn btn-@(item.IsExisted?"danger":"success")">تغییر وضعیت</a>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                    <partial name="_AdminPaging"
+                             model="Model.Products.ToPaginationPartial(Model.Specification!.PageIndex)" />
+                </div>
+            </div>
+        }
+        else
+        {
+            <p class="alert alert-info mt-2">موردی جهت نمایش وجود ندارد</p>
+        }
+    </div>
+
+</form>

@@ -1,0 +1,125 @@
+﻿@using CarPartsShop.Application.Statics
+@using CarPartsShop.Application.ViewModels.Orders
+@model CartViewModel
+@{
+    ViewData["Title"] = "سبد خرید";
+}
+@if (Model != null && Model.Items != null && Model.Items.Any())
+{
+
+		<section class="pt-3 pt-lg-5">
+			<div class="container">
+				<div class="row g-4 g-lg-5">
+
+					<!-- Left side START -->
+					<div class="col-lg-8">
+						<!-- My Cart START -->
+						<div class="card bg-transparent">
+							<!-- Card header -->
+							<div class="card-header border-bottom d-flex justify-content-between align-items-center px-0 pb-3">
+								<h4 class="card-title mb-0">سفارشات</h4>
+								<span>@Model.Items.Count</span>
+							</div>
+
+							<!-- Card body -->
+							<div class="card-body p-0 pt-4">
+								<!-- Product item START -->
+								@foreach (var item in Model.Items)
+								{
+									<div class="row" id="cart-div">
+										<!-- Image -->
+										<div class="col-5 col-md-2">
+											<div class="bg-light p-2 rounded-2">
+												<img src="@StaticDetails.ProductOrgImagePath@item.MainImage" alt="">
+											</div>
+										</div>
+
+										<div class="col-7 col-md-10">
+											<div class="row g-2">
+												<!-- Content -->
+												<div class="col-md-7">
+													<!-- Product detail START -->
+													<h5 class="mb-1"><a href="#">@item.ProductTitle</a></h5>
+													<!-- List -->
+													<h3 class="text-success">تعداد: @item.Count</h3>
+												</div>
+
+												<!-- Select -->
+												<div class="col-md-2">
+													<a onclick="increaseDecreaseCartItem(@item.OrderDetailId,'i')" class="btn btn-info" href="javascript:void()">+</a>
+													<a onclick="increaseDecreaseCartItem(@item.OrderDetailId,'d')" class="btn btn-info" href="javascript:void()">-</a>
+												</div>
+
+												<!-- Price and button -->
+												<div class="col-md-3 text-md-end">
+
+													<h5>@item.Price.ToString("#,0")</h5>
+													<h5>جمع کل: @((item.Price * item.Count).ToString("#,0"))</h5>
+													<!-- Buttons -->
+													<div class="hstack gap-1 flex-wrap text-primary-hover mt-2 justify-content-md-end">
+														<a onclick="removeFormCart('@item.OrderDetailId')" class="text-reset small"><i class="bi bi-trash3 me-2"></i>حذف</a>
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+								}
+								<!-- Product item END -->
+
+							</div>
+
+							<!-- Card footer -->
+						</div>
+						<!-- My Cart END -->
+					</div>
+					<!-- Left side END -->
+					<!-- Right Side START -->
+					<div class="col-lg-4">
+						<!-- Coupon code START -->
+						<!-- Coupon code END -->
+						<!-- Order summary START -->
+						<div class="card bg-light border border-secondary border-opacity-25 rounded-2 p-4">
+							<!-- card header -->
+							<div class="card-header bg-light p-0 pb-3">
+								<h5 class="card-title mb-0">جزئیات پرداخت</h5>
+							</div>
+
+
+							<!-- Card footer -->
+							<div class="card-footer bg-light border-top p-0 pt-3">
+								<div class="d-flex justify-content-between align-items-center mb-3">
+									<span>پرداخت</span>
+									<span class="h5 mb-0">@Model.Sum.ToString("#,0") تومان</span>
+								</div>
+
+								<!-- Button -->
+								<div class="d-grid"><a href="/complete-order-info/?orderId=@Model.OrderId" class="btn btn-primary mb-0">پرداخت</a></div>
+							</div>
+						</div>
+					</div>
+					<!-- Right Side END -->
+
+				</div>
+			</div>
+		</section>
+
+}
+
+					else{
+<section>
+	<div class="container">
+		<div class="row">
+			<div class="col-12 text-center">
+				<!-- Image -->
+				<img src="/site/assets/images/icon/empty-cart.svg" class="h-200 h-md-300 mb-3" alt="">
+				<!-- Subtitle -->
+				<h2>سبد خرید شما در حال حاضر خالی است!</h2>
+				<!-- info -->
+				<p class="mb-0">فکر می کنم دکمه زیر مهم است. با زدن این دکمه، محصولات جالب زیادی را در صفحه "خرید" ما پیدا خواهید کرد.</p>
+				<!-- Button -->
+				<a href="/" class="btn btn-primary mt-4 mb-0">بازشگت به خانه</a>
+			</div>
+		</div>
+	</div>
+</section>
+					}

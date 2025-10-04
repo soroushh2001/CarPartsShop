@@ -1,0 +1,28 @@
+﻿@using MobileStore.Application.ViewModels.Products
+@model ProductFilterSpecification 
+<!-- Search filter START -->
+<div class="row g-2 g-xl-4 mb-4">
+	<!-- Search -->
+	<div class="col-xl-6">
+		<div class="rounded position-relative">
+			<input class="form-control pe-5" name="Search" value="@Model.Search" placeholder="جستجو..." aria-label="Search">
+			<button class="btn bg-transparent border-0 px-2 py-0 position-absolute top-50 end-0 translate-middle-y" type="submit"><i class="bi bi-search fs-5"> </i></button>
+		</div>
+	</div>
+
+	<!-- Select -->
+	<div class="col-md-4 col-xl-3">
+		<select class="form-select" onchange="submitPagingForm()" name="OrderBy" asp-items="@ViewBag.OrderBySelectList">
+			<option value="" disabled>ترتیب</option>
+		</select>
+	</div>
+
+	<!-- Select -->
+	<div class="col-md-4 col-xl-3">
+		<select onchange="submitPagingForm()" class="form-select" name="SortBy" asp-items="@ViewBag.SortBySelectList">
+			<option value="" disabled>براساس</option>
+		</select>
+	</div>
+
+</div>
+<!-- Search filter END -->

@@ -1,0 +1,85 @@
+﻿@using CarPartsShop.Application.Extensions
+@using CarPartsShop.Application.ViewModels.Orders
+@using CarPartsShop.Mvc.Helpers
+@model CarPartsShop.Application.ViewModels.Orders.FilterOrdersViewModel
+@{
+    ViewData["Title"] = "سفارشات";
+    int counter = 0;
+}
+
+<form asp-area="Admin" asp-controller="Orders" asp-action="Index" class="mt-2" method="get" id="filter-form">
+    <input type="hidden" id="PageIndex" name="PageIndex" value="@Model.Specification?.PageIndex" />
+        <div class="card">
+            <h5 class="card-header">فیلتر</h5>
+            <div class="card-body">
+                <div class="row align-items-center g-3 mb-3">
+                    <div class="col-auto">
+                        <label class="form-label">جستجو</label>
+                        <input type="text" class="form-control form-control-sm" asp-for="Specification.Search">
+                    </div>
+                    s
+
+               
+
+                    <div class="col-auto">
+                        <label class="form-label">دسته‌بندی</label>
+                        <select class="form-select form-select-sm" asp-for="Specification.OrderStatus" asp-items="@Html.GetEnumSelectList<OrderStatusForAdmin>()">
+                        </select>
+                    </div>
+
+                    <div class="col-auto align-self-end">
+                        <button onclick="submitPagingForm()" class="btn mt-3 btn-sm btn-info">فیلتر</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        @if (Model.Orders?.Items != null && Model.Orders.Items.Any())
+        {
+            <div class="card mt-2">
+                <div class="table-responsive text-nowrap">
+
+
+                    <table class="table">
+                        <thead>
+                            <tr class="text-nowrap">
+                                <th>#</th>
+                                <th>کد پیگیری</th>
+                                <th>وضعیت</th>
+                                <th>جمع کل</th>
+                                <th>تاریخ پرداخت</th>
+                                <th>عملیات</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model.Orders.Items)
+                            {
+                                counter++;
+                                <tr>
+                                    <th scope="row">@counter</th>
+                                    <td>@item.RefId</td>
+                                    <td>@item.OrderStatus.GetDisplayName()</td>
+                                    <td>@item.Sum.ToString("#,0")تومان</td>
+                                    <td>@item.PaymentDate?.ToShamsiDate()</td>
+
+                                    <td>
+                                        <a href="javascirpt:void(0)" class="btn btn-primary" onclick="loadRecipientInfoModal('@item.RefId')">مشاهده مشخصات تحویل گیرنده</a>
+                                        <a class="btn btn-info" href="/admin/orders/ShowOrder/?orderId=@item.OrderId&refCode=@item.RefId">مشاهده سفارش</a>
+                                        <a class="btn btn-success" href="javascript:void(0)" onclick="loadChangeOrderStatusModal('@item.RefId')">تغییر وضعیت</a>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                    <partial name="_AdminPaging"
+                             model="Model.Orders.ToPaginationPartial(Model.Specification!.PageIndex)" />
+                </div>
+            </div>
+        }
+        else
+        {
+            <p class="alert alert-info mt-2">موردی جهت نمایش وجود ندارد</p>
+        }
+    </div>
+
+</form>

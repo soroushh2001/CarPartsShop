@@ -1,0 +1,33 @@
+﻿@using CarPartsShop.Application.ViewModels.Orders
+@using CarPartsShop.Domain.Entities.Order
+@model ChangeOrderStatusViewModel
+
+<form id="edit-order-form" asp-area="Admin" asp-action="SubmitChangeOrderStatusModal" asp-controller="Orders"
+      data-ajax="true" data-ajax-begin="startWaiting()" data-ajax-success="submitChangeOrderStatusModal">
+    <input type="hidden" asp-for="RefCode" />
+    <div class="modal-header">
+
+        <h5 class="modal-title" id="exampleModalLabel1">ویرایش وضعیت @Model.RefCode</h5>
+
+
+
+
+        <button type="button" class="btn-close new-style10" data-bs-dismiss="modal" aria-label="Close"></button>
+    </div>
+
+    <div class="modal-body">
+        <div class="row">
+            <div class="col mb-3">
+                <label for="nameBasic" class="form-label">وضعیت</label>
+                <select type="text" asp-for="OrderStatus" asp-items="@Html.GetEnumSelectList<OrderStatus>()" class="form-control"> </select>
+            </div>
+        </div>
+      
+
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">بستن</button>
+        <button type="submit" class="btn btn-primary">ویرایش</button>
+    </div>
+</form>
+

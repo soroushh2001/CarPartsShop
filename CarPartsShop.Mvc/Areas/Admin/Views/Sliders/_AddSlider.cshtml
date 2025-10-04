@@ -1,0 +1,37 @@
+﻿@using CarPartsShop.Application.ViewModels.Sliders
+@model CreateSliderViewModel
+<form id="add-slider-form" asp-area="Admin" asp-action="SubmitAddSliderModal" asp-controller="Sliders"
+      data-ajax="true" data-ajax-begin="startWaiting()" data-ajax-success="submitAddSliderModal" enctype="multipart/form-data">
+
+    <div class="modal-header">
+
+        <h5 class="modal-title" id="exampleModalLabel1">افزودن اسلایدر جدید</h5>
+
+
+
+        <button type="button" class="btn-close new-style10" data-bs-dismiss="modal" aria-label="Close"></button>
+    </div>
+
+    <div class="modal-body">
+        <div class="row">
+            <div class="col mb-3">
+                <label for="nameBasic" class="form-label">عکس</label>
+                <input type="file" asp-for="Image" class="form-control">
+                <span class="text-danger" asp-validation-for="Image"></span>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col mb-3">
+                <label for="nameBasic" class="form-label">اولویت</label>
+                <input  asp-for="Priority" class="form-control">
+                <span class="text-danger" asp-validation-for="Priority"></span>
+            </div>
+        </div>
+
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">بستن</button>
+        <button type="submit" class="btn btn-primary">ثبت</button>
+    </div>
+</form>
+

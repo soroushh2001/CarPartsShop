@@ -1,0 +1,13 @@
+﻿
+@{
+    ViewData["Title"] = "نتیجه پرداخت";
+}
+
+@if (ViewBag.Id != null)
+{
+    <p class="alert alert-info">تراکنش موفق کد پیگیری سفارش: @ViewBag.Id</p>
+}
+else
+{
+    <p class="alert alert-danger">تراکنش ناموفق</p>
+}

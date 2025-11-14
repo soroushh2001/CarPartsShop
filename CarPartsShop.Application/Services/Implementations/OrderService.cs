@@ -163,20 +163,6 @@ namespace CarPartsShop.Application.Services.Implementations
             await _orderRepository.SaveChangesAsync();
         }
 
-        public async Task<List<CartItemViewModel>> GetCartItemsByOrderIdAsync(int orderId)
-        {
-            var details = await _orderRepository.GetOrderDetailItemsByOrderIdAsync(orderId);
-            return details.Select(x => new CartItemViewModel
-            {
-                Count = x.Count,
-                MainImage = x.Product.MainImage,
-                ProductTitle = x.Product.Title,
-                ProductId = x.Product.Id,
-                OrderDetailId = x.Id,
-                Price = x.Price,
-            }).ToList();
-        }
-
         public async Task<List<UserOrderViewModel>> GetUserFinallyOrdersAsync(int userId)
         {
             var orders = await _orderRepository.GetUserFinallyOrdersAsync(userId);
@@ -211,11 +197,11 @@ namespace CarPartsShop.Application.Services.Implementations
             return cart.OrderDetails.Count();
         }
 
-        public async Task<FilterOrdersViewModel> FilterOrdersAsync(OrderFilterSpecification specification)
+        public async Task<FilterOrdersViewModel> FilterOrdersAsync(FilterOrdersViewModel filter)
         {
             var query = _orderRepository.GetAllOrders();
 
-            switch (specification.OrderStatus)
+            switch (filter.OrderStatus)
             {
                 case OrderStatusForAdmin.All:
                     break;
@@ -229,14 +215,22 @@ namespace CarPartsShop.Application.Services.Implementations
                     break;
             }
 
-
-            if (!string.IsNullOrEmpty(specification.Search))
+            if (!string.IsNullOrEmpty(filter.RefId))
             {
-                query = query.Where(x => x.RefId == specification.Search);
+                query = query.Where(x => x.RefId == filter.RefId);
             }
 
-            query = query.OrderByDescending(X => X.PaymentDate);
-       
+
+            switch (filter.SortOrders)
+            {
+                case SortOrders.Ascending:
+                    query = query.OrderByDescending(x => x.PaymentDate);
+                    break;
+                case SortOrders.Descending:
+                    query = query.OrderBy(x => x.PaymentDate);
+                    break;
+            }
+
             var items = query.Select(x => new UserOrderViewModel
             {
                 OrderId = x.Id,
@@ -245,14 +239,8 @@ namespace CarPartsShop.Application.Services.Implementations
                 Sum = x.Sum,
                 RefId = x.RefId
             }).AsQueryable();
-
-            var paging = await PaginatedList<UserOrderViewModel>.CreateAsync(items, specification.PageIndex, specification.PageSize);
-
-            return new FilterOrdersViewModel
-            {
-                Orders = paging,
-                Specification = specification,
-            };
+            await filter.SetPaging(items);
+            return filter;
         }
 
         public async Task<ChangeOrderStatusViewModel?> GetCurrentOrderStatusToChangeAsync(string refCode)
@@ -291,6 +279,48 @@ namespace CarPartsShop.Application.Services.Implementations
                 ZipCode = order.ZipCode,
                 RefId = refCode
             };
+        }
+
+        public async Task DeleteProductFromCartIfNotExistedAsync(int userId)
+        {
+            var order = await _orderRepository.GetUserLatestOpenOrderAsync(userId);
+            var notExistedProducts = order.OrderDetails.Where(o => !o.Product.IsExisted).ToList();
+            foreach(var product in notExistedProducts)
+            {
+                _orderRepository.RemoveOrderDetail(product);
+            }
+            await _orderRepository.SaveChangesAsync();
+            order.Sum = await _orderRepository.UpdateSumOrderAsync(order.Id);
+            _orderRepository.UpdateOrder(order);
+            await _orderRepository.SaveChangesAsync();
+        }
+
+        public async Task<List<CartItemViewModel>> GetCartItemsByOrderIdAsync(int orderId)
+        {
+            var details = await _orderRepository.GetOrderDetailItemsByOrderIdAsync(orderId);
+            return details.Select(x => new CartItemViewModel
+            {
+                Count = x.Count,
+                MainImage = x.Product.MainImage,
+                ProductTitle = x.Product.Title,
+                ProductId = x.Product.Id,
+                OrderDetailId = x.Id,
+                Price = x.Price,
+            }).ToList();
+        }
+
+        public async Task<List<CartItemViewModel>> GetCartItemByUserIdAsync(int userId)
+        {
+            var order = await _orderRepository.GetUserLatestOpenOrderAsync(userId);
+            return order.OrderDetails.Select(x=> new CartItemViewModel()
+            {
+                Count= x.Count,
+                MainImage= x.Product.MainImage,
+                ProductTitle = x.Product.Title,
+                Price= x.Price,
+                OrderDetailId= x.Id,
+                ProductId= x.Id,
+            }).ToList();
         }
     }
 }

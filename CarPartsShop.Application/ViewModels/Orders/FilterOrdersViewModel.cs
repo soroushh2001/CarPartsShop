@@ -1,15 +1,32 @@
 ﻿using CarPartsShop.Application.ViewModels.Common;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.ComponentModel.DataAnnotations;
 
 namespace CarPartsShop.Application.ViewModels.Orders
 {
-    public class FilterOrdersViewModel
+    public class FilterOrdersViewModel : Paging<UserOrderViewModel>
     {
-        public PaginatedListViewModel<UserOrderViewModel> Orders { get; set; }
-        public OrderFilterSpecification Specification { get; set; }  
+        public string? RefId { get; set; }
+        public SortOrders SortOrders { get; set; }
+        public OrderStatusForAdmin OrderStatus { get; set; }
+
+    }
+    public enum SortOrders
+    {
+        [Display(Name = "جدیدترین")]
+        Ascending,
+        [Display(Name = "قدیمی ترین")]
+        Descending,
+    }
+    public enum OrderStatusForAdmin
+    {
+        [Display(Name = "همه")]
+        All,
+        [Display(Name = "در حال آماده سازی")]
+        InPreparation,
+        [Display(Name = "تحویل اداره پست داده شد")]
+        Post,
+        [Display(Name = "دریافت شد")]
+        Received
+
     }
 }

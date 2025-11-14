@@ -1,4 +1,5 @@
 ﻿using CarPartsShop.Application.Services.Interfaces;
+using CarPartsShop.Mvc.Helpers;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CarPartsShop.Mvc.Areas.Order.ViewComponents
@@ -11,9 +12,9 @@ namespace CarPartsShop.Mvc.Areas.Order.ViewComponents
             _orderService = orderService;
         }
 
-        public async Task<IViewComponentResult> InvokeAsync(int orderId)
+        public async Task<IViewComponentResult> InvokeAsync()
         {
-            return View(await _orderService.GetCartItemsByOrderIdAsync(orderId));
+            return View(await _orderService.GetCartItemByUserIdAsync(HttpContext.User.GetCurrentUserId()));
         }
     }
 }

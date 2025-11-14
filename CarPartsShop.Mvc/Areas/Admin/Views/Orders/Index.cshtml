@@ -8,24 +8,31 @@
 }
 
 <form asp-area="Admin" asp-controller="Orders" asp-action="Index" class="mt-2" method="get" id="filter-form">
-    <input type="hidden" id="PageIndex" name="PageIndex" value="@Model.Specification?.PageIndex" />
+    <input type="hidden" asp-for="CurrentPage" />
         <div class="card">
             <h5 class="card-header">فیلتر</h5>
             <div class="card-body">
                 <div class="row align-items-center g-3 mb-3">
                     <div class="col-auto">
                         <label class="form-label">جستجو</label>
-                        <input type="text" class="form-control form-control-sm" asp-for="Specification.Search">
+                        <input type="text" class="form-control form-control-sm" asp-for="RefId">
                     </div>
-                    s
+                    
 
                
 
                     <div class="col-auto">
                         <label class="form-label">دسته‌بندی</label>
-                        <select class="form-select form-select-sm" asp-for="Specification.OrderStatus" asp-items="@Html.GetEnumSelectList<OrderStatusForAdmin>()">
+                        <select class="form-select form-select-sm" asp-for="OrderStatus" asp-items="@Html.GetEnumSelectList<OrderStatusForAdmin>()">
                         </select>
                     </div>
+
+                <div class="col-auto">
+                    <label class="form-label">مرتب سازی</label>
+                    <select class="form-select form-select-sm" asp-for="OrderStatus" asp-items="@Html.GetEnumSelectList<SortOrders>()">
+                    </select>
+                </div>
+
 
                     <div class="col-auto align-self-end">
                         <button onclick="submitPagingForm()" class="btn mt-3 btn-sm btn-info">فیلتر</button>
@@ -34,7 +41,7 @@
             </div>
         </div>
 
-        @if (Model.Orders?.Items != null && Model.Orders.Items.Any())
+        @if (Model.Entities != null && Model.Entities.Any())
         {
             <div class="card mt-2">
                 <div class="table-responsive text-nowrap">
@@ -52,7 +59,7 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach (var item in Model.Orders.Items)
+                            @foreach (var item in Model.Entities)
                             {
                                 counter++;
                                 <tr>
@@ -72,7 +79,7 @@
                         </tbody>
                     </table>
                     <partial name="_AdminPaging"
-                             model="Model.Orders.ToPaginationPartial(Model.Specification!.PageIndex)" />
+                             model="Model.GetPaging()" />
                 </div>
             </div>
         }

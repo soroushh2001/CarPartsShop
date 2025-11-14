@@ -6,7 +6,6 @@ using CarPartsShop.Application.ViewModels.Products;
 using CarPartsShop.Domain.Entities.Order;
 using CarPartsShop.Domain.Entities.Shop;
 using CarPartsShop.Domain.Interfaces;
-using MobileStore.Application.ViewModels.Products;
 
 namespace CarPartsShop.Application.Services.Implementations
 {
@@ -19,35 +18,35 @@ namespace CarPartsShop.Application.Services.Implementations
             _productRepository = productRepository;
         }
 
-        public async Task<FilterProductViewModel> FilterProductAsync(ProductFilterSpecification specification)
+        public async Task<FilterProductViewModel> FilterProductAsync(FilterProductViewModel filter)
         {
             var query = _productRepository.GetAllProducts();
 
-            if (specification.CategoryUrls != null)
+            if (filter.CategoryUrls != null)
             {
                 query = query.Where(p =>
                     p.ProductCategories != null &&
                     p.ProductCategories.Any(pc =>
-                        pc.Category != null && specification.CategoryUrls.Contains(pc.Category.Slug)));
+                        pc.Category != null && filter.CategoryUrls.Contains(pc.Category.Slug)));
             }
 
-            if (specification.CategoryTitle != null)
+            if (filter.CategoryTitle != null)
             {
-                query = query.Where(x => x.ProductCategories.Any(x => x.Category.Title == specification.CategoryTitle));
+                query = query.Where(x => x.ProductCategories.Any(x => x.Category.Title == filter.CategoryTitle));
             }
 
-            if (specification.BrandTitle != null)
+            if (filter.BrandTitle != null)
             {
-                query = query.Where(x => x.ProductCarBrands.Any(x => x.CarBrand.Slug == specification.BrandTitle));
+                query = query.Where(x => x.ProductCarBrands.Any(x => x.CarBrand.Slug == filter.BrandTitle));
             }
 
-            if (specification.MinPrice.HasValue)
-                query = query.Where(p => p.Price >= specification.MinPrice.Value);
+            if (filter.MinPrice.HasValue)
+                query = query.Where(p => p.Price >= filter.MinPrice.Value);
 
-            if (specification.MaxPrice.HasValue)
-                query = query.Where(p => p.Price <= specification.MaxPrice.Value);
+            if (filter.MaxPrice.HasValue)
+                query = query.Where(p => p.Price <= filter.MaxPrice.Value);
 
-            switch (specification.ProductQualityForFilter)
+            switch (filter.ProductQualityForFilter)
             {
                 case ProductQualityForFilter.All:
                     break;
@@ -62,48 +61,47 @@ namespace CarPartsShop.Application.Services.Implementations
                     break;
             }
 
-            if (specification.IsExisted != null)
+            if (filter.IsExisted != null)
             {
-                query = query.Where(x => x.IsExisted == specification.IsExisted);
+                query = query.Where(x => x.IsExisted == filter.IsExisted);
             }
 
-            if (specification.Search != null)
+            if (filter.Search != null)
             {
-                specification.SortBy = "Title";
-                query = query.Where(p => p.Title.Contains(specification.Search))
-                    .OrderByDescending(p => p.Title.StartsWith(specification.Search) ? 1 : 0);
+                filter.SortBy = ProductSortBy.Title;
+                query = query.Where(p => p.Title.Contains(filter.Search))
+                    .OrderByDescending(p => p.Title.StartsWith(filter.Search) ? 1 : 0);
             }
             else
             {
-                if (!string.IsNullOrEmpty(specification.SortBy))
+                switch (filter.SortBy)
                 {
-                    var orderCondition = specification.OrderBy == "Desc";
-
-
-                    switch (specification.SortBy)
-                    {
-                        case "ModifiedDate":
-                            query = orderCondition
-                                ? query.OrderByDescending(x => x.LastModifiedDate)
-                                : query.OrderBy(x => x.LastModifiedDate);
-                            break;
-                        case "Price":
-                            query = orderCondition ? query.OrderByDescending(x => x.Price) : query.OrderBy(x => x.Price);
-                            break;
-                        case "Title":
-                            query = orderCondition ? query.OrderByDescending(x => x.Title) : query.OrderBy(x => x.Title);
-                            break;
-                        case "BestSeller":
-                            query = orderCondition ? 
-                                query.OrderByDescending(x => x.OrderDetails
+                    case ProductSortBy.Date:
+                        query = filter.OrderBy == ProductOrderBy.Desc
+                            ? query.OrderByDescending(x => x.LastModifiedDate)
+                            : query.OrderBy(x => x.LastModifiedDate);
+                        break;
+                    case ProductSortBy.Price:
+                        query = filter.OrderBy == ProductOrderBy.Desc
+                            ? query.OrderByDescending(x => x.Price)
+                            : query.OrderBy(x => x.Price);
+                        break;
+                    case ProductSortBy.Title:
+                        query = filter.OrderBy == ProductOrderBy.Desc
+                            ? query.OrderByDescending(x => x.Title)
+                            : query.OrderBy(x => x.Title);
+                        break;
+                    case ProductSortBy.BestSeller:
+                        query = filter.OrderBy == ProductOrderBy.Desc
+                            ? query.OrderByDescending(x => x.OrderDetails
                                 .Where(od => od.Order.Status != OrderStatus.WaitToPayment)
                                 .Sum(od => od.Count))
-                                : query.OrderBy(x => x.OrderDetails
+                            : query.OrderBy(x => x.OrderDetails
                                 .Where(od => od.Order.Status != OrderStatus.WaitToPayment)
                                 .Sum(od => od.Count));
-                            break;
-                    }
+                        break;
                 }
+
             }
             var items = query.Select(x => new ProductsListViewModel
             {
@@ -119,13 +117,8 @@ namespace CarPartsShop.Application.Services.Implementations
                 Slug = x.Slug
             }).AsQueryable();
 
-            var paging = await PaginatedList<ProductsListViewModel>.CreateAsync(items, specification.PageIndex, specification.PageSize);
-
-            return new FilterProductViewModel
-            {
-                Products = paging,
-                Specification = specification
-            };
+            await filter.SetPaging(items);
+            return filter;
         }
 
         public async Task<CreateProductResult> CreateProductAsync(CreateProductViewModel createProductViewModel)

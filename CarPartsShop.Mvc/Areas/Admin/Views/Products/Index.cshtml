@@ -10,7 +10,7 @@
 
 
 <form class="mt-2" method="get" id="filter-form">
-    <input type="hidden" id="PageIndex" name="PageIndex" value="@Model.Specification?.PageIndex" />
+    <input type="hidden" asp-for="CurrentPage" />
     <div class="row">
         <div class="card">
             <h5 class="card-header">فیلتر</h5>
@@ -18,20 +18,19 @@
                 <div class="row align-items-center g-3 mb-3">
                     <div class="col-auto">
                         <label class="form-label">جستجو</label>
-                        <input type="text" class="form-control form-control-sm" name="Search"
-                               value="@Model.Specification?.Search">
+                        <input type="text" class="form-control form-control-sm" asp-for="Search">
                     </div>
 
                     <div class="col-auto">
                         <label class="form-label">مرتب‌سازی</label>
-                        <select class="form-select form-select-sm" name="SortBy"
-                                asp-items="@ViewBag.SortBySelectList"></select>
+                        <select class="form-select form-select-sm" asp-for="SortBy"
+                                asp-items="@Html.GetEnumSelectList<ProductSortBy>()"></select>
                     </div>
 
                     <div class="col-auto">
                         <label class="form-label">ترتیب</label>
-                        <select class="form-select form-select-sm" name="OrderBy"
-                                asp-items="@ViewBag.OrderBySelectList"></select>
+                        <select class="form-select form-select-sm" asp-for="OrderBy"
+                                asp-items="@Html.GetEnumSelectList<ProductOrderBy>()"></select>
                     </div>
 
                     <div class="col-auto">
@@ -46,11 +45,9 @@
                     <div class="col-auto">
                         <label class="form-label">قیمت</label>
                         <div class="d-flex align-items-center gap-2">
-                            <input type="text" class="form-control form-control-sm" name="MinPrice"
-                                   value="@Model.Specification?.MinPrice" placeholder="از">
+                            <input type="text" class="form-control form-control-sm" asp-for="MinPrice" placeholder="از">
                             <span>تا</span>
-                            <input type="text" class="form-control form-control-sm" name="MaxPrice"
-                                   value="@Model.Specification?.MaxPrice" placeholder="تا">
+                            <input type="text" class="form-control form-control-sm" asp-for="MaxPrice" placeholder="تا">
                         </div>
                     </div>
                     <div class="col-auto align-self-end">
@@ -66,7 +63,7 @@
             </div>
         </div>
 
-        @if (Model.Products?.Items != null && Model.Products.Items.Any())
+        @if (Model.Entities != null && Model.Entities.Any())
         {
             <div class="card mt-2">
                 <div class="table-responsive text-nowrap">
@@ -85,7 +82,7 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach (var item in Model.Products.Items)
+                            @foreach (var item in Model.Entities)
                             {
                                 counter++;
                                 <tr>
@@ -117,7 +114,7 @@
                         </tbody>
                     </table>
                     <partial name="_AdminPaging"
-                             model="Model.Products.ToPaginationPartial(Model.Specification!.PageIndex)" />
+                             model="Model.GetPaging()" />
                 </div>
             </div>
         }

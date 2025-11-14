@@ -24,11 +24,10 @@ namespace CarPartsShop.Mvc.Areas.Admin.Controllers
 
         #region OrdersList
         [HttpGet]
-        public async Task<IActionResult> Index(OrderFilterSpecification specification)
+        public async Task<IActionResult> Index(FilterOrdersViewModel filter)
         {
-            specification.PageSize = 10;
-            var filter = await _orderService.FilterOrdersAsync(specification);
-            return View(filter);
+            filter.TakeEntity = 10;
+            return View(await _orderService.FilterOrdersAsync(filter));
         }
 
         #endregion

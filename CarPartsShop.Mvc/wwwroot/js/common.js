@@ -1,6 +1,6 @@
 ﻿//handle paging-form
 function submitPagingForm(pageIndex){
-    $("#PageIndex").val(pageIndex);
+    $("#CurrentPage").val(pageIndex);
     $('#filter-form').submit();
 }
 

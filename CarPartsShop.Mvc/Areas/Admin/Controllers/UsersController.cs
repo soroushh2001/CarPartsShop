@@ -35,35 +35,18 @@ namespace CarPartsShop.Mvc.Areas.Admin.Controllers
 
         #region FilterUsers
 
-        public async Task<IActionResult> Index(UserFilterSpecification specification)
+        public async Task<IActionResult> Index(FilterUserViewModel filter)
         {
-
-            ViewBag.OrderBySelectList = new List<SelectListItem>()
-        {
-            new SelectListItem()
-            {
-                Value = "Newest",
-                Text = "جدیدترین",
-                Selected = specification.OrderBy == "Newest"
-            },
-            new SelectListItem()
-            {
-                Value = "Oldest",
-                Text = "قدیمیترین",
-                Selected = specification.OrderBy == "Oldest"
-            }
-        }.ToList();
-
             var roleList = await _roleManager.Roles.ToListAsync();
 
             ViewBag.Roles = roleList.Select(x => new SelectListItem
             {
                 Text = x.Title,
                 Value = x.Name,
-                Selected = x.Name == specification.Role
+                Selected = x.Name == filter.Role
             }).ToList();
-            var filter = await _userService.FilterUsersAsync(specification);
-            return View(filter);
+            var result = await _userService.FilterUsersAsync(filter);
+            return View(result);
         }
 
 

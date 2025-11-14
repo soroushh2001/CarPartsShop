@@ -16,9 +16,11 @@ namespace CarPartsShop.Application.Services.Interfaces
         Task<List<UserOrderViewModel>> GetUserFinallyOrdersAsync(int userId);
         Task<List<OrderDetailsViewModel>> GetOrderDetailsByOrderIdAsync(int orderId);
         Task<int> GetCurrentCartItemsCountAsync(int userId);
-        Task<FilterOrdersViewModel> FilterOrdersAsync(OrderFilterSpecification specification);
+        Task<FilterOrdersViewModel> FilterOrdersAsync(FilterOrdersViewModel filter);
         Task<ChangeOrderStatusViewModel?> GetCurrentOrderStatusToChangeAsync(string refCode);
         Task<bool> ChangeOrderStatusAsync(ChangeOrderStatusViewModel change);
         Task<RecipientInfoViewModel?> GetRecipientInfoAsync(string refCode);
+        Task DeleteProductFromCartIfNotExistedAsync(int userId);
+        Task<List<CartItemViewModel>> GetCartItemByUserIdAsync(int userId);
     }
 }

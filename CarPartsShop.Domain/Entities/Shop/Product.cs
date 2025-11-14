@@ -23,6 +23,7 @@ namespace CarPartsShop.Domain.Entities.Shop
 
         public bool IsExisted { get; set; }
 
+
         public ICollection<ProductCarBrand>? ProductCarBrands { get; set; }
 
         public ICollection<ProductCategory>? ProductCategories { get; set; }

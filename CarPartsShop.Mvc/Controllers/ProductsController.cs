@@ -1,9 +1,9 @@
 ﻿using CarPartsShop.Application.Extensions;
 using CarPartsShop.Application.Services.Interfaces;
 using CarPartsShop.Application.ViewModels.Comments;
+using CarPartsShop.Application.ViewModels.Products;
 using CarPartsShop.Mvc.Helpers;
 using Microsoft.AspNetCore.Mvc;
-using MobileStore.Application.ViewModels.Products;
 using System.Threading.Tasks;
 
 namespace CarPartsShop.Mvc.Controllers
@@ -26,10 +26,10 @@ namespace CarPartsShop.Mvc.Controllers
 
         [HttpGet("products")]
         [HttpGet("products/{BrandTitle?}")]
-        public async Task<IActionResult> Index(ProductFilterSpecification specification)
+        public async Task<IActionResult> Index(FilterProductViewModel filter)
         {
-            specification.PageSize = 9;
-            return View(await _productService.FilterProductAsync(specification));
+            filter.TakeEntity = 9;
+            return View(await _productService.FilterProductAsync(filter));
         }
 
         #endregion

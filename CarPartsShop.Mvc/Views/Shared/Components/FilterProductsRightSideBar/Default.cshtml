@@ -1,6 +1,6 @@
 ﻿@using CarPartsShop.Application.ViewModels.Categories
-@using MobileStore.Application.ViewModels.Products
-@model ProductFilterSpecification
+@using CarPartsShop.Application.ViewModels.Products
+@model CarPartsShop.Application.ViewModels.Products.FilterProductViewModel
 @{
 	var categories = ViewBag.Categories as List<CategoryViewModel>;
 }
@@ -60,8 +60,8 @@
 					<!-- Title -->
 					<h6 class="mb-3">قیمت</h6>
 
-					<input class="form-control form-control-sm" name="MinPrice" value="@Model.MinPrice" placeholder="از" />
-					<input class="form-control form-control-sm" name="MinPrice" value="@Model.MaxPrice" placeholder="تا" />
+					<input class="form-control form-control-sm" asp-for="MinPrice" placeholder="از" />
+					<input class="form-control form-control-sm" asp-for="MaxPrice" placeholder="تا" />
 					<button class="btn btn-primary mb-0" type="submit">نتیجه فیلتر</button>
 				</div>
 			

@@ -1,6 +1,6 @@
 ﻿using CarPartsShop.Application.Services.Interfaces;
+using CarPartsShop.Application.ViewModels.Products;
 using Microsoft.AspNetCore.Mvc;
-using MobileStore.Application.ViewModels.Products;
 
 namespace CarPartsShop.Mvc.ViewComponents
 {
@@ -12,11 +12,11 @@ namespace CarPartsShop.Mvc.ViewComponents
             _categoryService = categoryService;
         }
 
-        public async Task<IViewComponentResult> InvokeAsync(ProductFilterSpecification specification)
+        public async Task<IViewComponentResult> InvokeAsync(FilterProductViewModel filter)
         {
             ViewBag.Categories = await _categoryService.GetAllCategoriesAsync(false);
 
-            return View(specification);
+            return View(filter);
         }
     }
 }

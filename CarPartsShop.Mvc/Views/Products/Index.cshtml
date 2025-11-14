@@ -7,7 +7,7 @@
 
 
 <form method="get" id="filter-form" asp-controller="Products" asp-action="Index" asp-area="">
-	<input type="hidden" id="PageIndex" name="PageIndex" value="@Model.Specification?.PageIndex" />
+	<input type="hidden" asp-for="CurrentPage" />
 	<section class="pt-3 pt-lg-5">
 		<div class="container">
 			<div class="row">
@@ -16,21 +16,21 @@
 					<h2 class="m-0">جستجو محصول</h2>
 				</div>
 
-				@await Component.InvokeAsync("FilterProductsRightSideBar", Model.Specification)
+				@await Component.InvokeAsync("FilterProductsRightSideBar", Model)
 
 				<!-- Main part START -->
 				<div class="col-xl-9">
 
 
-					@await Component.InvokeAsync("MainFilterProducts", Model.Specification)
+					@await Component.InvokeAsync("MainFilterProducts", Model)
 
 					<!-- Product START -->
 					<div class="row g-4">
 
 
-						@if (Model.Products.Items!=null && Model.Products.Items.Any())
+						@if (Model.Entities!=null && Model.Entities.Any())
 						{
-							foreach(var item in Model.Products.Items)
+							foreach(var item in Model.Entities)
 							{
 								<!-- Product item START -->
 								<div class="col-sm-6 col-md-4">
@@ -75,7 +75,7 @@
 							<p class="alert alert-info">محصولی جهت نمایش وجود ندارد</p>
 						}
 						<!-- Pagination START -->
-						<partial name="_ProductsPaging" model="Model.Products.ToPaginationPartial(Model.Specification!.PageIndex)" />
+						<partial name="_ProductsPaging" model="Model.GetPaging()" />
 						<!-- Pagination END -->
 					</div>
 					<!-- Product END -->

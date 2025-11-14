@@ -1,27 +1,27 @@
-﻿@model CarPartsShop.Application.ViewModels.Common.PaginationPartialViewModel
+﻿@model CarPartsShop.Application.ViewModels.Common.PagingViewModel
 
 <div class="col-12">
     <nav class="d-flex justify-content-center" aria-label="navigation">
         <!-- Pagination 1 2 3  -->
         <ul class="pagination pagination-bordered justify-content-center d-inline-block d-lg-flex">
 
-            @if (Model.HasPreviousPage)
+            @if (Model.CurrentPage > 1)
             {
                 <li class="page-item">
-                    <a class="page-link" onclick="submitPagingForm('@(Model.PageIndex - 1)')" href="javascript:void(0);">قبلی</a>
+                    <a class="page-link" onclick="submitPagingForm('@(Model.CurrentPage-1 )')" href="javascript:void(0);">قبلی</a>
                 </li>
             }
           
-            @foreach(var page in Model.VisiblePages)
+            @for (var i = Model.StartPage; i <= Model.EndPage; i++)
             {
-                <li class="page-item @(page == Model.PageIndex ? "active" : "")"> <a class="page-link" onclick="submitPagingForm('@(page)')" href="javascript:void(0);">@(page)</a></li>
+                <li class="page-item @(i == Model.CurrentPage ? "active" : "")"> <a class="page-link" onclick="submitPagingForm('@(i)')" href="javascript:void(0);">@(i)</a></li>
 
             }
 
-            @if (Model.HasNextPage)
+            @if (Model.CurrentPage < Model.EndPage)
             {
                 <li class="page-item">
-                    <a class="page-link" onclick="submitPagingForm('@(Model.PageIndex + 1)')" href="javascript:void(0);">بعدی</a>
+                    <a class="page-link" onclick="submitPagingForm('@(Model.CurrentPage + 1)')" href="javascript:void(0);">بعدی</a>
                 </li>
             }
 

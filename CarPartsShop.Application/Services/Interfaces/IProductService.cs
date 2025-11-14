@@ -1,13 +1,12 @@
 ﻿using CarPartsShop.Application.ViewModels.Categories;
 using CarPartsShop.Application.ViewModels.Products;
 using CarPartsShop.Domain.Entities.Shop;
-using MobileStore.Application.ViewModels.Products;
 
 namespace CarPartsShop.Application.Services.Interfaces
 {
     public interface IProductService
     {
-        Task<FilterProductViewModel> FilterProductAsync(ProductFilterSpecification specification);
+        Task<FilterProductViewModel> FilterProductAsync(FilterProductViewModel filter);
         Task<CreateProductResult> CreateProductAsync(CreateProductViewModel createProductViewModel);
         Task AddCategoriesToProductAsync(List<int> categoriesIds, int productId);
         Task AddBrandToProductAsync(List<int> brandsIds, int productId);

@@ -60,6 +60,7 @@ namespace CarPartsShop.Mvc.Areas.Order.Controllers
         [Authorize]
         public async Task<IActionResult> ShowCart()
         {
+            await _orderService.DeleteProductFromCartIfNotExistedAsync(User.GetCurrentUserId());
             return View(await _orderService.GetCartAsync(User.GetCurrentUserId()));
         }
 
@@ -90,9 +91,8 @@ namespace CarPartsShop.Mvc.Areas.Order.Controllers
         #region CompleteOrderInformation
 
         [HttpGet("complete-order-info")]
-        public IActionResult CompleteOrderInformation(int orderId)
+        public IActionResult CompleteOrderInformation()
         {
-            ViewBag.OrderId = orderId;
             return View();
         }
 
@@ -109,7 +109,54 @@ namespace CarPartsShop.Mvc.Areas.Order.Controllers
             if (ModelState.IsValid)
             {
                 await _orderService.CompleteOrderInformation(User.GetCurrentUserId(), orderInfo);
-                return Redirect("/start-payment");
+
+                try
+                {
+                    string authority = "";
+                    string callbackurl = $"{_configuration.GetValue<string>("Domain")}/verify-payment";
+                    var totalPrice = await _orderService.GetCurrentCartTotalPriceAsync(User.GetCurrentUserId());
+                    var amount = totalPrice * 10;
+                    string description = "پرداخت نهایی سبد خرید شما";
+                    string merchant = _configuration.GetValue<string>("Merchant");
+
+                    using (var client = new HttpClient())
+                    {
+                        Application.ViewModels.Payment.RequestParameters parameters = new Application.ViewModels.Payment.RequestParameters(merchant, amount.ToString(), description, callbackurl, "", "");
+
+                        var json = JsonConvert.SerializeObject(parameters);
+
+                        HttpContent content = new StringContent(json, Encoding.UTF8, "application/json");
+
+                        HttpResponseMessage response = await client.PostAsync(URLs.requestUrl, content);
+
+                        string responseBody = await response.Content.ReadAsStringAsync();
+
+                        JObject jo = JObject.Parse(responseBody);
+                        string errorscode = jo["errors"].ToString();
+
+                        JObject jodata = JObject.Parse(responseBody);
+                        string dataauth = jodata["data"].ToString();
+
+
+                        if (dataauth != "[]")
+                        {
+                            authority = jodata["data"]["authority"].ToString();
+
+                            string gatewayUrl = URLs.gateWayUrl + authority;
+
+                            return Redirect(gatewayUrl);
+                        }
+                        else
+                        {
+                            return BadRequest("error " + errorscode);
+                        }
+                    }
+                }
+
+                catch (Exception ex)
+                {
+                    throw new Exception(ex.Message);
+                }
             }
 
             return View(orderInfo);
@@ -117,61 +164,6 @@ namespace CarPartsShop.Mvc.Areas.Order.Controllers
 
 
         #endregion
-
-        #region Payment
-
-        [HttpGet("start-payment")]
-        public async Task<IActionResult> StartPayment()
-        {
-            try
-            {
-                string authority = "";
-                string callbackurl = $"{_configuration.GetValue<string>("Domain")}/verify-payment";
-                var totalPrice = await _orderService.GetCurrentCartTotalPriceAsync(User.GetCurrentUserId());
-                var amount = totalPrice * 10;
-                string description = "پرداخت نهایی سبد خرید شما";
-                string merchant = _configuration.GetValue<string>("Merchant");
-
-                using (var client = new HttpClient())
-                {
-                    Application.ViewModels.Payment.RequestParameters parameters = new Application.ViewModels.Payment.RequestParameters(merchant, amount.ToString(), description, callbackurl, "", "");
-
-                    var json = JsonConvert.SerializeObject(parameters);
-
-                    HttpContent content = new StringContent(json, Encoding.UTF8, "application/json");
-
-                    HttpResponseMessage response = await client.PostAsync(URLs.requestUrl, content);
-
-                    string responseBody = await response.Content.ReadAsStringAsync();
-
-                    JObject jo = JObject.Parse(responseBody);
-                    string errorscode = jo["errors"].ToString();
-
-                    JObject jodata = JObject.Parse(responseBody);
-                    string dataauth = jodata["data"].ToString();
-
-
-                    if (dataauth != "[]")
-                    {
-                        authority = jodata["data"]["authority"].ToString();
-
-                        string gatewayUrl = URLs.gateWayUrl + authority;
-
-                        return Redirect(gatewayUrl);
-                    }
-                    else
-                    {
-                        return BadRequest("error " + errorscode);
-                    }
-                }
-            }
-
-            catch (Exception ex)
-            {
-                throw new Exception(ex.Message);
-            }
-
-        }
 
         [HttpGet("verify-payment")]
         [AllowAnonymous]
@@ -246,7 +238,6 @@ namespace CarPartsShop.Mvc.Areas.Order.Controllers
             return NotFound();
         }
 
-        #endregion
 
         #region UserOrders
 

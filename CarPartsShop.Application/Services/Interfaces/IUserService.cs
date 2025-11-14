@@ -9,6 +9,6 @@ namespace CarPartsShop.Application.Services.Interfaces
 {
     public interface IUserService
     {
-        Task<FilterUserViewModel> FilterUsersAsync(UserFilterSpecification specification);
+        Task<FilterUserViewModel> FilterUsersAsync(FilterUserViewModel filter);
     }
 }

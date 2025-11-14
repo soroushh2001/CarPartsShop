@@ -6,7 +6,6 @@ using CarPartsShop.Mvc.Helpers;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using MobileStore.Application.ViewModels.Products;
 
 namespace CarPartsShop.Mvc.Areas.Admin.Controllers
 {
@@ -30,54 +29,9 @@ namespace CarPartsShop.Mvc.Areas.Admin.Controllers
 
         #region ProductsList
 
-        public async Task<IActionResult> Index(ProductFilterSpecification specification)
+        public async Task<IActionResult> Index(FilterProductViewModel filter)
         {
-            specification.PageSize = 9;
-            var filter = await _productService.FilterProductAsync(specification);
-
-            ViewBag.OrderBySelectList = new List<SelectListItem>()
-        {
-            new()
-            {
-                Value = "Desc",
-                Text = "نزولی",
-                Selected = filter.Specification?.OrderBy == "Desc"
-            },
-            new()
-            {
-                Value = "Asc",
-                Text = "صعودی",
-                Selected = filter.Specification?.OrderBy == "Asc"
-            }
-        };
-
-            ViewBag.SortBySelectList = new List<SelectListItem>()
-        {
-            new()
-            {
-                Value = "ModifiedDate",
-                Text = "جدیدترین",
-                Selected = filter.Specification?.SortBy == "ModifiedDate"
-            },
-            new()
-            {
-                Value = "Price",
-                Text = "قیمت",
-                Selected = filter.Specification?.SortBy == "Price"
-            },
-            new()
-            {
-                Value = "Title",
-                Text = "عنوان",
-                Selected = filter.Specification?.SortBy == "Title"
-            },
-                new()
-                {
-                    Value = "BestSeller",
-                    Text = "مقدار فروش",
-                    Selected = filter.Specification?.SortBy == "BestSeller"
-                }
-        };
+            filter.TakeEntity = 9;
 
             var categories = await _categoryService.GetAllMainCategoriesAsync();
 
@@ -85,10 +39,10 @@ namespace CarPartsShop.Mvc.Areas.Admin.Controllers
             {
                 Text = x.Title,
                 Value = x.Title,
-                Selected = x.Title == specification.CategoryTitle
+                Selected = x.Title == filter.CategoryTitle
             });
-
-            return View(filter);
+            
+            return View(await _productService.FilterProductAsync(filter));
         }
 
         #endregion

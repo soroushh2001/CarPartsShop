@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace CarPartsShop.Application.Services.Implementations
 {
-    public class UserService:IUserService
+    public class UserService : IUserService
     {
         private readonly IUserRepository _userRepository;
 
@@ -14,31 +14,27 @@ namespace CarPartsShop.Application.Services.Implementations
         {
             _userRepository = userRepository;
         }
-        public async Task<FilterUserViewModel> FilterUsersAsync(UserFilterSpecification specification)
+        public async Task<FilterUserViewModel> FilterUsersAsync(FilterUserViewModel filter)
         {
 
-            var query = _userRepository.GetAllUsers(); // اینجا Include شده
+            var query = _userRepository.GetAllUsers(); 
 
-            if (!string.IsNullOrEmpty(specification.Search))
+            if (!string.IsNullOrEmpty(filter.Search))
             {
-                query = query.Where(x => x.Email.ToLower().Contains(specification.Search.ToLower()));
+                query = query.Where(x => x.Email.ToLower().Contains(filter.Search.ToLower()));
             }
 
-            if (!string.IsNullOrEmpty(specification.Role))
+            if (!string.IsNullOrEmpty(filter.Role))
             {
-                query = query.Where(x => x.UserRoles.Any(ur => ur.Role.Name == specification.Role));
+                query = query.Where(x => x.UserRoles.Any(ur => ur.Role.Name == filter.Role));
             }
 
-            switch (specification.OrderBy)
+            switch (filter.Sort)
             {
-                case "Newest":
+                case SortUser.Newest:
                     query = query.OrderByDescending(x => x.RegisteredDate);
                     break;
-                case "Oldest":
-                    query = query.OrderBy(x => x.RegisteredDate);
-                    break;
-                default:
-                    query = query.OrderByDescending(x => x.RegisteredDate);
+                case SortUser.Oldest:
                     break;
             }
 
@@ -55,13 +51,9 @@ namespace CarPartsShop.Application.Services.Implementations
                         IsLockedOut = x.LockoutEnd.HasValue && x.LockoutEnd > DateTime.UtcNow
                     });
 
-            var paging = await PaginatedList<UserViewModel>.CreateAsync(items, specification.PageIndex, specification.PageSize);
+            await filter.SetPaging(items);
 
-            return new FilterUserViewModel
-            {
-                Specification = specification,
-                Users = paging
-            };
+            return filter;
         }
     }
 }

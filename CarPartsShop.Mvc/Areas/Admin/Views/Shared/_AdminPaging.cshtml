@@ -1,30 +1,29 @@
-﻿@model CarPartsShop.Application.ViewModels.Common.PaginationPartialViewModel
+﻿@model CarPartsShop.Application.ViewModels.Common.PagingViewModel
 
 <nav aria-label="Page navigation" class="m-2">
     <ul class="pagination justify-content-center">
-        @if (Model.HasPreviousPage)
+        @if (Model.CurrentPage>1)
         {
             
             <li class="page-item prev">
-                <a class="page-link" onclick="submitPagingForm('@(Model.PageIndex-1)')" href="javascript:void(0);"><i class="tf-icon bx bx-chevrons-right"></i></a>
+                <a class="page-link" onclick="submitPagingForm('@(Model.CurrentPage-1)')" href="javascript:void(0);"><i class="tf-icon bx bx-chevrons-right"></i></a>
             </li>
         }
         
-        @foreach (var page in Model.VisiblePages)
+        @for (var i = Model.StartPage; i <= Model.EndPage; i++)
         {
-            <li class="page-item @(page==Model.PageIndex ? "active" : "")">
-                <a class="page-link" onclick="submitPagingForm('@(page)')" href="javascript:void(0);">@(page)</a>
+            <li class="page-item @(i==Model.CurrentPage ? "active" : "")">
+                <a class="page-link" onclick="submitPagingForm('@i')" href="javascript:void(0);">@i</a>
             </li>
         }
         
-        @if (Model.HasNextPage)
+        @if (Model.CurrentPage < Model.EndPage)
         {
             <li class="page-item next">
-                <a class="page-link" onclick="submitPagingForm('@(Model.PageIndex+1)')" href="javascript:void(0);"><i class="tf-icon bx bx-chevrons-left"></i></a>
+                <a class="page-link" onclick="submitPagingForm('@(Model.CurrentPage+1)')" href="javascript:void(0);"><i class="tf-icon bx bx-chevrons-left"></i></a>
             </li> 
         }
         
-       
-        
+]        
     </ul>
 </nav>
